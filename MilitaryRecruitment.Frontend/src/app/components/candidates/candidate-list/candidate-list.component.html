@@ -1,0 +1,80 @@
+<div class="candidate-list-container">
+  <div class="page-header">
+    <h1 class="page-title">Candidates</h1>
+    <p class="page-subtitle">Manage and review candidate applications</p>
+  </div>
+
+  <div class="candidate-actions">
+    <button mat-raised-button color="primary" (click)="addCandidate()">
+      <mat-icon>person_add</mat-icon>
+      Add Candidate
+    </button>
+  </div>
+
+  <div class="loading-spinner" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading candidates...</p>
+  </div>
+
+  <div class="candidate-table" *ngIf="!isLoading">
+    <table mat-table [dataSource]="candidates" class="mat-elevation-z1">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let candidate">
+          {{ candidate.firstName }} {{ candidate.lastName }}
+        </td>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let candidate">{{ candidate.email }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let candidate">
+          <mat-chip [ngClass]="getStatusClass(candidate.status)">
+            {{ candidate.status | titlecase }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Application Date Column -->
+      <ng-container matColumnDef="applicationDate">
+        <th mat-header-cell *matHeaderCellDef>Applied On</th>
+        <td mat-cell *matCellDef="let candidate">
+          {{ candidate.applicationDate | date:'mediumDate' }}
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let candidate">
+          <button mat-icon-button color="primary" (click)="viewCandidate(candidate.id)" matTooltip="View">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="editCandidate(candidate)" matTooltip="Edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <mat-paginator 
+    *ngIf="!isLoading && candidates.length > 0"
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    (page)="onPageChange($event)"
+    aria-label="Select page">
+  </mat-paginator>
+</div>

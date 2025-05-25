@@ -1,0 +1,68 @@
+<div class="app-container">
+  <!-- Top Navigation Bar -->
+  <mat-toolbar color="primary" class="app-toolbar">
+    <button mat-icon-button (click)="sidenav.toggle()" class="menu-button" aria-label="Toggle menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    
+    <span class="app-title">Military Recruitment</span>
+    
+    <span class="spacer"></span>
+    
+    <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu-button" aria-label="User menu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    
+    <mat-menu #userMenu="matMenu" xPosition="before">
+      <button mat-menu-item disabled>
+        <mat-icon>person</mat-icon>
+        <span>Profile</span>
+      </button>
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+  
+  <!-- Side Navigation -->
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="side" [opened]="true" class="app-sidenav">
+      <div class="sidenav-header">
+        <div class="sidenav-logo">
+          <mat-icon class="logo-icon">military_tech</mat-icon>
+          <span class="logo-text">Recruit+</span>
+        </div>
+      </div>
+      
+      <mat-nav-list>
+        <a mat-list-item routerLink="/vacancies" routerLinkActive="active" (click)="sidenav.close()">
+          <mat-icon matListItemIcon>work_outline</mat-icon>
+          <span matListItemTitle>Vacancies</span>
+        </a>
+        
+        <a mat-list-item routerLink="/candidates" routerLinkActive="active" (click)="sidenav.close()">
+          <mat-icon matListItemIcon>people_outline</mat-icon>
+          <span matListItemTitle>Candidates</span>
+        </a>
+        
+        <mat-divider></mat-divider>
+        
+        <a mat-list-item (click)="onLogout()">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span matListItemTitle>Logout</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    
+    <!-- Main Content -->
+    <mat-sidenav-content class="main-content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  
+  <!-- Loading Spinner -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+</div>
