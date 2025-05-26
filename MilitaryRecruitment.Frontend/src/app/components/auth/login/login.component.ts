@@ -30,7 +30,7 @@ import { finalize } from 'rxjs/operators';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  hidePassword = true;
+  hidePassword = false;
   isLoading = false;
   errorMessage: string | null = null;
 
