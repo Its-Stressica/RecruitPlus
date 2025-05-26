@@ -1,5 +1,5 @@
 // Move Candidate interface here to avoid circular dependency
-interface CandidateBasic {
+export interface CandidateBasic {
   id: string;
   firstName: string;
   lastName: string;
