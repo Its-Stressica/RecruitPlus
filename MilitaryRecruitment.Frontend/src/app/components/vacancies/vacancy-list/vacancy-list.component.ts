@@ -33,7 +33,7 @@ import { TruncatePipe } from '../../../shared/pipes/truncate.pipe';
     TruncatePipe
   ],
   templateUrl: './vacancy-list.component.html',
-  styleUrl: './vacancy-list.component.scss'
+  styleUrl: './vacancy-list.component.css'
 })
 export class VacancyListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;

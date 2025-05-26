@@ -1,6 +1,6 @@
 /* Military Theme Colors */
 :root {
-  --primary: #2a7b2f;  /* Dark green */
+  --primary: #4a6741;  /* Dark green */
   --primary-light: #6b8c5f;
   --primary-dark: #2a3d24;
   --accent: #8b9e6f;  /* Olive green */
@@ -26,24 +26,30 @@ body {
   color: white !important;
 }
 
-.mat-button, .mat-raised-button, .mat-icon-button {
-  &.mat-primary {
-    background-color: var(--primary);
-    color: white;
-    
-    &:hover {
-      background-color: var(--primary-dark);
-    }
-  }
-  
-  &.mat-accent {
-    background-color: var(--accent);
-    color: white;
-    
-    &:hover {
-      background-color: var(--primary-dark);
-    }
-  }
+.mat-button.mat-primary,
+.mat-raised-button.mat-primary,
+.mat-icon-button.mat-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.mat-button.mat-primary:hover,
+.mat-raised-button.mat-primary:hover,
+.mat-icon-button.mat-primary:hover {
+  background-color: var(--primary-dark);
+}
+
+.mat-button.mat-accent,
+.mat-raised-button.mat-accent,
+.mat-icon-button.mat-accent {
+  background-color: var(--accent);
+  color: white;
+}
+
+.mat-button.mat-accent:hover,
+.mat-raised-button.mat-accent:hover,
+.mat-icon-button.mat-accent:hover {
+  background-color: var(--primary-dark);
 }
 
 .card {

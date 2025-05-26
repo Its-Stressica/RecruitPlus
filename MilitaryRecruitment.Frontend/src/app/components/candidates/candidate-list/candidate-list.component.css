@@ -1,0 +1,202 @@
+/* Candidate List Container */
+.candidate-list-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Page Header */
+.candidate-list-container .page-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.candidate-list-container .page-header .page-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1a237e;
+  margin-bottom: 0.5rem;
+}
+
+.candidate-list-container .page-header .page-subtitle {
+  color: #5c6bc0;
+  font-size: 1.1rem;
+}
+
+/* Loading Spinner */
+.candidate-list-container .loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: #5c6bc0;
+}
+
+.candidate-list-container .loading-spinner p {
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+/* Add Candidate Button */
+.candidate-list-container .add-candidate-btn {
+  margin-bottom: 1.5rem;
+  background-color: #3949ab;
+  color: white;
+}
+
+.candidate-list-container .add-candidate-btn:hover {
+  background-color: #303f9f;
+}
+
+/* Table Styles */
+.candidate-list-container .mat-table {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.candidate-list-container .mat-header-cell {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1a237e;
+  background-color: #e8eaf6;
+}
+
+.candidate-list-container .mat-cell {
+  padding: 1rem 1rem;
+}
+
+.candidate-list-container .mat-row {
+  transition: background-color 0.2s;
+}
+
+.candidate-list-container .mat-row:hover {
+  background-color: #f5f5f5;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge.status-new {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.status-badge.status-in-review {
+  background-color: #fff8e1;
+  color: #ff8f00;
+}
+
+.status-badge.status-interview {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge.status-hired {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+  font-weight: 600;
+}
+
+.status-badge.status-rejected {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-badge.status-default {
+  background-color: #f5f5f5;
+  color: #424242;
+}
+
+/* Action Buttons */
+.action-buttons button {
+  margin-right: 0.5rem;
+  min-width: 0;
+  padding: 0 8px;
+}
+
+.action-buttons button mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  line-height: 18px;
+}
+
+/* Paginator */
+.mat-paginator {
+  background-color: transparent;
+  margin-top: 1rem;
+}
+
+/* No Candidates Message */
+.no-candidates {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #5c6bc0;
+}
+
+.no-candidates .no-data-icon {
+  font-size: 4rem;
+  height: 4rem;
+  width: 4rem;
+  margin-bottom: 1rem;
+  color: #c5cae9;
+}
+
+.no-candidates h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #3949ab;
+}
+
+.no-candidates p {
+  color: #7986cb;
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .candidate-list-container {
+    padding: 1rem;
+  }
+  
+  .candidate-list-container .mat-table .mat-header-row {
+    display: none;
+  }
+  
+  .candidate-list-container .mat-table .mat-row {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .candidate-list-container .mat-table .mat-cell {
+    padding: 0.5rem 0;
+    width: 100%;
+    border: none;
+  }
+  
+  .candidate-list-container .mat-table .mat-cell::before {
+    content: attr(data-label);
+    font-weight: 600;
+    margin-right: 0.5rem;
+    color: #5c6bc0;
+  }
+  
+  .candidate-list-container .mat-table .action-buttons {
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

@@ -14,6 +14,8 @@ import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'app-login',
   standalone: true,
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -24,9 +26,7 @@ import { finalize } from 'rxjs/operators';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  ]
 })
 export class LoginComponent {
   loginForm: FormGroup;

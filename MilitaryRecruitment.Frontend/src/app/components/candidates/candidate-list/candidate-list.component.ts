@@ -27,7 +27,7 @@ export interface Candidate {
     MatProgressSpinnerModule
   ],
   templateUrl: './candidate-list.component.html',
-  styleUrl: './candidate-list.component.scss'
+  styleUrl: './candidate-list.component.css'
 })
 export class CandidateListComponent {
   displayedColumns: string[] = ['name', 'email', 'status', 'applicationDate', 'actions'];
