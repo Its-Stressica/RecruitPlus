@@ -29,7 +29,7 @@ public class UnitOfWork
     public void GenerateData()
     {
         var random = new Random();
-        var numberOfCandidates = random.Next(1, 10);
+        var numberOfCandidates = random.Next(3, 10);
         var numberOfVacancies = random.Next(numberOfCandidates, 2*numberOfCandidates);
 
         GenerateApplications(GenerateCandidates(numberOfCandidates), GenerateVacancies(numberOfVacancies));

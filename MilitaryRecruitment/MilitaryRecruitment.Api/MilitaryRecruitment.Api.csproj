@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MilitaryRecruitment.BusinessLogic\MilitaryRecruitment.BusinessLogic.csproj" />
     <ProjectReference Include="..\MilitaryRecruitment.DataAccess\MilitaryRecruitment.DataAccess.csproj" />
   </ItemGroup>
 

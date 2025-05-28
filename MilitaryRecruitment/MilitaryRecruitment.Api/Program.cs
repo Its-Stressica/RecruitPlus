@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MilitaryRecruitment.BusinessLogic.Services;
 using MilitaryRecruitment.DataAccess;
 using MilitaryRecruitment.DataAccess.Identity;
 using MilitaryRecruitment.DataAccess.Repositories;
@@ -25,8 +26,9 @@ builder.Services.AddTransient<CandidateRepository>();
 builder.Services.AddTransient<VacancyRepository>();
 builder.Services.AddTransient<ApplicationRepository>();
 
-//builder.Services.AddTransient<CandidateService>();
-//builder.Services.AddTransient<VacancyService>();
+builder.Services.AddTransient<CandidateService>();
+builder.Services.AddTransient<VacancyService>();
+builder.Services.AddTransient<ApplicationService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
