@@ -1,0 +1,192 @@
+<div class="vacancy-details-container">
+  <!-- Back button -->
+  <button mat-button color="primary" routerLink="/vacancies" class="back-button">
+    <mat-icon>arrow_back</mat-icon>
+    Back to Vacancies
+  </button>
+
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <!-- Vacancy details -->
+  <div *ngIf="!isLoading && vacancy" class="vacancy-content">
+    <!-- Vacancy header -->
+    <div class="vacancy-header">
+      <h1>{{ vacancy.title || 'Vacancy Details' }}</h1>
+      <div class="vacancy-meta">
+        <span class="meta-item" *ngIf="vacancy.department || vacancy.unit">
+          <mat-icon>business</mat-icon>
+          {{ vacancy.department }}<span *ngIf="vacancy.department && vacancy.unit"> - </span>{{ vacancy.unit }}
+        </span>
+        <span class="meta-item" *ngIf="vacancy.location">
+          <mat-icon>location_on</mat-icon>
+          {{ vacancy.location }}
+        </span>
+        <span class="meta-item" *ngIf="vacancy.positionType">
+          <mat-icon>work</mat-icon>
+          {{ vacancy.positionType }}
+        </span>
+        <span class="meta-item" *ngIf="vacancy.experienceLevel">
+          <mat-icon>star</mat-icon>
+          {{ vacancy.experienceLevel }}
+        </span>
+        <span class="meta-item" *ngIf="vacancy.salaryRange?.isPublic">
+          <mat-icon>attach_money</mat-icon>
+          {{ vacancy.salaryRange?.min }} - {{ vacancy.salaryRange?.max }} {{ vacancy.salaryRange?.currency }}
+        </span>
+      </div>
+      
+      <div class="vacancy-status">
+        <span class="status-badge" [ngClass]="{
+          'status-active': vacancy.isActive,
+          'status-inactive': !vacancy.isActive
+        }">
+          {{ vacancy.isActive ? 'Active' : 'Inactive' }}
+        </span>
+        <span class="applications-count">
+          <mat-icon>people</mat-icon>
+          {{ vacancy.applicationCount || 0 }} applications
+        </span>
+      </div>
+    </div>
+
+    <mat-divider class="divider"></mat-divider>
+
+    <!-- Vacancy details tabs -->
+    <mat-tab-group (selectedTabChange)="selectedTab = $event.index">
+      <!-- Description tab -->
+      <mat-tab label="Description">
+        <div class="tab-content" *ngIf="vacancy">
+          <h3>Job Description</h3>
+          <div [innerHTML]="vacancy.description"></div>
+        </div>
+      </mat-tab>
+      
+      <!-- Requirements tab -->
+      <mat-tab label="Requirements">
+        <div class="tab-content" *ngIf="vacancy">
+          <h3>Requirements</h3>
+          <ul *ngIf="vacancy.requirements?.length; else noRequirements">
+            <li *ngFor="let req of vacancy.requirements">{{ req }}</li>
+          </ul>
+          <ng-template #noRequirements>
+            <p>No requirements specified.</p>
+          </ng-template>
+        </div>
+      </mat-tab>
+      
+      <!-- Responsibilities tab -->
+      <mat-tab label="Responsibilities">
+        <div class="tab-content" *ngIf="vacancy">
+          <h3>Responsibilities</h3>
+          <ul *ngIf="vacancy.responsibilities?.length; else noResponsibilities">
+            <li *ngFor="let resp of vacancy.responsibilities">{{ resp }}</li>
+          </ul>
+          <ng-template #noResponsibilities>
+            <p>No responsibilities specified.</p>
+          </ng-template>
+        </div>
+      </mat-tab>
+
+      <!-- Candidates tab -->
+      <mat-tab label="Candidates" [disabled]="!vacancy.applicationCount">
+        <div class="tab-content">
+          <div class="candidates-header">
+            <h3>Candidate Applications ({{ applications.length || 0 }})</h3>
+          </div>
+          
+          <table mat-table [dataSource]="applications || []" class="mat-elevation-z1">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Candidate</th>
+              <td mat-cell *matCellDef="let application">
+                {{ getCandidateName(application.candidate) }}
+                <span class="chosen-badge" *ngIf="application.isChosenByAlgorithm" matTooltip="Chosen by algorithm">
+                  <mat-icon>stars</mat-icon>
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let application">{{ application.candidate?.email || 'N/A' }}</td>
+            </ng-container>
+
+            <!-- Score Column -->
+            <ng-container matColumnDef="score">
+              <th mat-header-cell *matHeaderCellDef>Score</th>
+              <td mat-cell *matCellDef="let application">
+                <div class="score-container">
+                  <mat-progress-bar
+                    class="progress-bar"
+                    mode="determinate"
+                    [value]="getApplicationProgress(application)"
+                    [color]="(applications.length / (vacancy.availablePositions || 1)) >= 1 ? 'warn' : 'primary'"
+                  ></mat-progress-bar>
+                  <span class="score-value">{{ application.score }}%</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let application">
+                <span class="status-badge {{ getStatusClass(application.status) }}">
+                  {{ application.status | titlecase }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let application">
+                <div class="action-buttons">
+                  <button 
+                    mat-icon-button 
+                    color="primary" 
+                    matTooltip="View candidate"
+                    (click)="viewCandidate(application.candidateId)">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button 
+                    mat-icon-button 
+                    color="primary" 
+                    matTooltip="Accept"
+                    [disabled]="application.status === 'accepted'"
+                    (click)="updateApplicationStatus(application.id, 'accepted')">
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                  <button 
+                    mat-icon-button 
+                    color="warn" 
+                    matTooltip="Reject"
+                    [disabled]="application.status === 'rejected'"
+                    (click)="updateApplicationStatus(application.id, 'rejected')">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr 
+              mat-row 
+              *matRowDef="let row; columns: displayedColumns;"
+              [class.selected]="row.isChosenByAlgorithm">
+            </tr>
+          </table>
+          
+          <div *ngIf="!applications.length" class="no-applications">
+            <mat-icon>info</mat-icon>
+            <p>No candidates have applied for this vacancy yet.</p>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
