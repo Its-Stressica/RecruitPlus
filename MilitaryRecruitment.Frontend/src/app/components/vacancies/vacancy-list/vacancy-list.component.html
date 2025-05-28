@@ -1,8 +1,22 @@
 <div class="vacancy-list-container">
   <!-- Header Section -->
   <div class="page-header">
-    <h1 class="page-title">Available Positions</h1>
-    <p class="page-subtitle">Browse and apply for open positions in the military forces</p>
+    <div class="header-content">
+      <div>
+        <h1 class="page-title">Vacancy Management</h1>
+        <p class="page-subtitle">Manage and track all open positions</p>
+      </div>
+      <div class="action-buttons">
+        <button mat-stroked-button color="primary" [routerLink]="['/candidates']" class="candidates-button">
+          <mat-icon>people</mat-icon>
+          See All Candidates
+        </button>
+        <button mat-raised-button color="primary" (click)="createNewVacancy()" class="create-button">
+          <mat-icon>add</mat-icon>
+          Create New Vacancy
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Loading Spinner -->
@@ -23,59 +37,60 @@
     <!-- Vacancy Cards -->
     <mat-card *ngFor="let vacancy of vacancies" class="vacancy-card">
       <mat-card-header>
-        <div mat-card-avatar class="vacancy-avatar">
-          <mat-icon class="vacancy-icon">military_tech</mat-icon>
+        <div class="vacancy-header-content">
+          <mat-card-title>{{ vacancy.title }}</mat-card-title>
+          <mat-card-subtitle>
+            <span class="department">{{ vacancy.department }}</span>
+            <span class="divider">•</span>
+            <span class="location">
+              {{ vacancy.location || 'Various Locations' }}
+            </span>
+          </mat-card-subtitle>
         </div>
-        <mat-card-title>{{ vacancy.title }}</mat-card-title>
-        <mat-card-subtitle>
-          <span class="department">{{ vacancy.department }}</span>
-          <mat-divider [vertical]="true"></mat-divider>
-          <span class="deadline" [class.expired]="vacancy.deadline ? isDeadlinePassed(vacancy.deadline) : false">
-            <mat-icon>schedule</mat-icon>
-            {{ formatDate(vacancy.deadline) }}
-            <span *ngIf="vacancy.deadline && isDeadlinePassed(vacancy.deadline)" class="expired-badge">Expired</span>
-          </span>
-        </mat-card-subtitle>
+        <span class="status-badge" [ngClass]="{'active': vacancy.isActive, 'inactive': !vacancy.isActive}">
+          {{ vacancy.isActive ? 'Active' : 'Inactive' }}
+        </span>
       </mat-card-header>
       
       <mat-card-content>
-        <div class="vacancy-meta">
-          <div class="meta-item">
-            <mat-icon>people</mat-icon>
-            <span>{{ vacancy.availablePositions }} position(s) available</span>
+        <!-- Quota and Progress -->
+        <div class="quota-section">
+          <div class="quota-info">
+            <div class="quota-item">
+              <span class="quota-label">Positions to Fill:</span>
+              <span class="quota-value">{{ vacancy.quota || 0 }}</span>
+            </div>
+            <div class="quota-item">
+              <span class="quota-label">Applications:</span>
+              <span class="quota-value">{{ vacancy.applicationCount || 0 }}</span>
+            </div>
           </div>
-          <div class="meta-item">
-            <mat-icon>location_on</mat-icon>
-            <span>{{ vacancy.location || 'Various Locations' }}</span>
-          </div>
-          <div class="meta-item">
-            <mat-icon>business</mat-icon>
-            <span>{{ vacancy.unit || 'Multiple Units' }}</span>
+          <div class="progress-text">
+            <span>{{ vacancy.quota || 0 }} Open position</span>
           </div>
         </div>
         
-        <div class="vacancy-description" [innerHTML]="vacancy.description | truncate: 200:true:'...':true"></div>
-        
-        <div class="requirements" *ngIf="vacancy.requirements?.length">
-          <h4>Requirements:</h4>
-          <ul>
-            <li *ngFor="let req of vacancy.requirements">{{ req }}</li>
-          </ul>
+        <div class="vacancy-meta">
+          <div class="meta-item">
+            <span>Posted: {{ formatDate(vacancy.createdAt) }}</span>
+          </div>
+          <div class="meta-item">
+            <span [class.expired]="isDeadlinePassed(vacancy.deadline)">
+              Deadline: {{ formatDate(vacancy.deadline) }}
+            </span>
+          </div>
         </div>
       </mat-card-content>
       
-      <mat-card-actions align="end">
-        <button mat-button color="primary" (click)="viewVacancyDetails(vacancy.id)">
-          <mat-icon>visibility</mat-icon>
+      <mat-card-actions align="end" class="recruiter-actions">
+        <button mat-button color="primary" [routerLink]="['/vacancies', vacancy.id]">
           View Details
         </button>
-        <button 
-          mat-raised-button 
-          color="primary" 
-          [disabled]="vacancy.deadline ? isDeadlinePassed(vacancy.deadline) : false"
-          (click)="applyForVacancy(vacancy)">
-          <mat-icon>how_to_reg</mat-icon>
-          {{ (vacancy.deadline && isDeadlinePassed(vacancy.deadline)) ? 'Application Closed' : 'Apply Now' }}
+        <button mat-button [routerLink]="['/vacancies', vacancy.id, 'applications']">
+          View Applications ({{ vacancy.applicationCount || 0 }})
+        </button>
+        <button mat-button color="warn" (click)="confirmDeleteVacancy(vacancy)">
+          Delete
         </button>
       </mat-card-actions>
     </mat-card>

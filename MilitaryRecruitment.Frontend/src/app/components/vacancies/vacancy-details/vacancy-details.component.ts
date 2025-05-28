@@ -12,8 +12,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { Vacancy, Application, CandidateBasic } from '../../../models/vacancy.model';
+import { Vacancy, Application } from '../../../models/vacancy.model';
 import { Candidate } from '../../../models/candidate.model';
+import { MockDataService } from '../../../core/services/mock-data.service';
 
 @Component({
   selector: 'app-vacancy-details',
@@ -38,15 +39,17 @@ import { Candidate } from '../../../models/candidate.model';
 })
 export class VacancyDetailsComponent implements OnInit {
   vacancy: Vacancy | null = null;
-  selectedTab = 0; // Track the active tab index
-  applications: Application[] = []; // Initialize as empty array to avoid null reference
+  selectedTab = 0;
+  applications: Application[] = [];
   isLoading = true;
-  displayedColumns: string[] = ['name', 'email', 'score', 'status', 'actions'];
+  error: string | null = null;
+  displayedColumns: string[] = ['candidate', 'score', 'status', 'appliedAt', 'actions'];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private mockDataService: MockDataService
   ) {}
 
   getApplicationProgress(application: Application): number {
@@ -73,135 +76,88 @@ export class VacancyDetailsComponent implements OnInit {
     if (id) {
       this.loadVacancyDetails(id);
     } else {
-      // Handle error - no ID provided
+      this.error = 'No vacancy ID provided';
+      this.isLoading = false;
+      this.showError('No vacancy ID provided');
       this.router.navigate(['/vacancies']);
     }
   }
 
   loadVacancyDetails(id: string): void {
-    // In a real app, you would call your API service here
-    // For now, we'll use mock data
     this.isLoading = true;
-    
-    // Simulate API call
-    setTimeout(() => {
-      // Mock vacancy data with all required fields
-      this.vacancy = {
-        id,
-        title: 'Senior Frontend Developer',
-        slug: 'senior-frontend-developer',
-        description: 'We are looking for an experienced Frontend Developer to join our team.',
-        requirements: [
-          '5+ years of experience with Angular',
-          'Strong TypeScript skills',
-          'Experience with state management (NgRx/NGXS)',
-          'Knowledge of RxJS',
-          'Experience with testing (Jest/Karma)'
-        ],
-        responsibilities: [
-          'Develop new user-facing features',
-          'Build reusable code and libraries',
-          'Optimize application for maximum speed and scalability',
-          'Collaborate with backend developers and web designers'
-        ],
-        department: 'Engineering',
-        location: 'Kyiv, Ukraine',
-        unit: 'Frontend Team',
-        positionType: 'full-time',
-        experienceLevel: 'senior',
-        salaryRange: {
-          min: 4000,
-          max: 7000,
-          currency: 'USD',
-          isPublic: true
-        },
-        quota: 3,
-        availablePositions: 2,
-        startDate: new Date('2023-06-01'),
-        deadline: new Date('2023-05-25'),
-        isActive: true,
-        isRemote: true,
-        applicationCount: 2,
-        tags: ['frontend', 'angular', 'typescript'],
-        skills: ['Angular', 'TypeScript', 'RxJS', 'NgRx', 'Jest'],
-        benefits: ['Remote work', 'Flexible hours', 'Health insurance', 'Professional development'],
-        createdBy: 'system',
-        createdAt: new Date('2023-01-15'),
-        updatedAt: new Date('2023-05-01'),
-        applications: [
-          {
-            id: 'app1',
-            candidateId: 'cand1',
-            vacancyId: id,
-            appliedAt: new Date('2023-05-15'),
-            status: 'pending',
-            score: 85,
-            isChosenByAlgorithm: true,
-            createdAt: new Date('2023-05-15'),
-            updatedAt: new Date('2023-05-15'),
-            candidate: {
-              id: 'cand1',
-              firstName: 'John',
-              lastName: 'Doe',
-              email: 'john.doe@example.com',
-              phone: '+380501234567',
-              score: 85
-            }
-          },
-          {
-            id: 'app2',
-            candidateId: 'cand2',
-            vacancyId: id,
-            appliedAt: new Date('2023-05-16'),
-            status: 'reviewed',
-            score: 65,
-            isChosenByAlgorithm: false,
-            createdAt: new Date('2023-05-16'),
-            updatedAt: new Date('2023-05-16'),
-            candidate: {
-              id: 'cand2',
-              firstName: 'Jane',
-              lastName: 'Smith',
-              email: 'jane.smith@example.com',
-              phone: '+380507654321',
-              score: 65
-            }
-          }
-        ]
-      };
-      
-      // Set applications
-      if (this.vacancy?.applications) {
-        this.applications = this.vacancy.applications;
+    this.error = null;
+
+    // Load vacancy details
+    this.mockDataService.getVacancyById(id).subscribe({
+      next: (vacancy) => {
+        if (vacancy) {
+          this.vacancy = vacancy;
+          this.loadApplications(id);
+        } else {
+          this.error = 'Vacancy not found';
+          this.isLoading = false;
+          this.showError('Vacancy not found');
+          this.router.navigate(['/vacancies']);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading vacancy:', error);
+        this.error = 'Failed to load vacancy details';
+        this.isLoading = false;
+        this.showError('Failed to load vacancy details');
       }
-      
-      this.isLoading = false;
-    }, 500);
+    });
   }
 
-  getCandidateName(candidate: CandidateBasic | undefined): string {
-    if (!candidate) return 'Unknown';
-    return `${candidate.firstName} ${candidate.lastName}`;
+  private loadApplications(vacancyId: string): void {
+    const applications = this.mockDataService.getApplicationsByVacancyId(vacancyId);
+    this.applications = applications || [];
+    this.isLoading = false;
   }
 
-  getStatusClass(status: 'pending' | 'reviewed' | 'accepted' | 'rejected'): string {
-    switch (status) {
-      case 'pending':
-        return 'status-pending';
-      case 'reviewed':
-        return 'status-reviewed';
+  getCandidateName(application: Application): string {
+    if (!application?.candidate) return 'Unknown Candidate';
+    return `${application.candidate.firstName || ''} ${application.candidate.lastName || ''}`.trim();
+  }
+
+  getStatusClass(status: string): string {
+    if (!status) return 'status-pending';
+    
+    switch (status.toLowerCase()) {
       case 'accepted':
         return 'status-accepted';
       case 'rejected':
         return 'status-rejected';
+      case 'pending':
       default:
-        const _exhaustiveCheck: never = status;
-        return '';
+        return 'status-pending';
     }
   }
 
   viewCandidate(candidateId: string): void {
     this.router.navigate(['/candidates', candidateId]);
+  }
+
+  viewApplication(applicationId: string): void {
+    this.router.navigate(['/applications', applicationId]);
+  }
+
+  getProgressPercentage(): number {
+    if (!this.vacancy) return 0;
+    const filled = this.applications.filter(a => a.status === 'accepted').length;
+    const total = this.vacancy.availablePositions || 1;
+    return Math.min(Math.round((filled / total) * 100), 100);
+  }
+
+  goBack(): void {
+    this.router.navigate(['/vacancies']);
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Close', { 
+      duration: 5000,
+      panelClass: ['error-snackbar']
+    });
   }
 
   updateApplicationStatus(applicationId: string, status: 'pending' | 'reviewed' | 'accepted' | 'rejected'): void {

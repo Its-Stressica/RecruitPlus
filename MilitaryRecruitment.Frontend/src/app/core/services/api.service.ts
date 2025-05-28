@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { MockDataService } from './mock-data.service';
 
 import { environment } from '../../../environments/environment';
@@ -62,10 +63,34 @@ export class ApiService {
 
   getVacancy(id: string): Observable<Vacancy> {
     if (this.useMockData) {
-      return this.mockDataService.getVacancyById(id) as Observable<Vacancy>;
+      return this.mockDataService.getVacancyById(id).pipe(
+        map((vacancy: Vacancy | undefined) => {
+          if (!vacancy) {
+            throw new Error('Vacancy not found');
+          }
+          return vacancy;
+        })
+      );
     }
-    
     return this.http.get<Vacancy>(`${this.apiUrl}/vacancies/${id}`);
+  }
+
+  /**
+   * Get applications for a specific vacancy
+   * @param vacancyId ID of the vacancy
+   */
+  getApplicationsByVacancy(vacancyId: string): Observable<Application[]> {
+    if (this.useMockData) {
+      const apps = this.mockDataService.getApplicationsByVacancyId(vacancyId);
+      // Ensure the returned applications match the Application interface from vacancy.model.ts
+      const typedApps: Application[] = apps.map(app => ({
+        ...app,
+        status: app.status || 'pending', // Default status if not provided
+        appliedAt: app.appliedAt || new Date() // Default to current date if not provided
+      }));
+      return of(typedApps);
+    }
+    return this.http.get<Application[]>(`${this.apiUrl}/vacancies/${vacancyId}/applications`);
   }
 
   getActiveVacancies(params: PaginationParams = {}): Observable<VacancyListResponse> {
@@ -95,6 +120,15 @@ export class ApiService {
     }
     
     return this.http.get<Candidate>(`${this.apiUrl}/candidates/${id}`);
+  }
+
+  // Delete a vacancy
+  deleteVacancy(id: string): Observable<void> {
+    if (this.useMockData) {
+      return of(undefined);
+    }
+    
+    return this.http.delete<void>(`${this.apiUrl}/vacancies/${id}`);
   }
 
   getCandidateApplications(candidateId: string): Observable<Application[]> {

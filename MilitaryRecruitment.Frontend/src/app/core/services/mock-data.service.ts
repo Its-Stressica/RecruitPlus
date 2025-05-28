@@ -157,10 +157,14 @@ applicationCount: 2,
           id: 'app1',
           candidateId: '1',
           vacancyId: '1',
-          score: 85,
+          score: 95,
           isChosenByAlgorithm: true,
-          createdAt: new Date('2025-05-15'),
-          updatedAt: new Date('2025-05-15'),
+          status: 'reviewed',
+          appliedAt: new Date('2025-05-01'),
+          reviewedAt: new Date('2025-05-10'),
+          notes: 'Strong candidate with relevant experience',
+          createdAt: new Date('2025-05-10'),
+          updatedAt: new Date('2025-05-10'),
           vacancy: {
             id: '1',
             title: 'Senior Frontend Developer',
@@ -188,6 +192,10 @@ applicationCount: 2,
           vacancyId: '2',
           score: 92,
           isChosenByAlgorithm: true,
+          status: 'accepted',
+          appliedAt: new Date('2025-05-05'),
+          reviewedAt: new Date('2025-05-10'),
+          notes: 'Top candidate with excellent skills',
           createdAt: new Date('2025-05-10'),
           updatedAt: new Date('2025-05-10'),
           vacancy: {
@@ -205,6 +213,9 @@ applicationCount: 2,
           vacancyId: '1',
           score: 88,
           isChosenByAlgorithm: false,
+          status: 'pending',
+          appliedAt: new Date('2025-05-05'),
+          notes: 'Good technical skills, needs cultural fit interview',
           createdAt: new Date('2025-05-12'),
           updatedAt: new Date('2025-05-12'),
           vacancy: {
@@ -229,20 +240,24 @@ applicationCount: 2,
       updatedAt: new Date('2025-05-15'),
       applications: [
         {
-          id: 'app4',
-          candidateId: '3',
-          vacancyId: '3',
-          score: 78,
+          id: 'app3',
+          candidateId: '1',
+          vacancyId: '2',
+          score: 92,
           isChosenByAlgorithm: true,
-          createdAt: new Date('2025-05-05'),
-          updatedAt: new Date('2025-05-05'),
+          status: 'accepted',
+          appliedAt: new Date('2025-05-10'),
+          reviewedAt: new Date('2025-05-15'),
+          notes: 'Excellent candidate, ready for offer',
+          createdAt: new Date('2025-05-18'),
+          updatedAt: new Date('2025-05-18'),
           vacancy: {
-            id: '3',
-            title: 'UI/UX Designer',
-            description: 'Looking for a creative UI/UX Designer',
-            quota: 1,
-            createdAt: new Date('2025-03-05'),
-            updatedAt: new Date('2025-05-15')
+            id: '2',
+            title: 'Backend Developer',
+            description: 'Looking for a skilled Backend Developer',
+            quota: 2,
+            createdAt: new Date('2025-02-10'),
+            updatedAt: new Date('2025-05-18')
           }
         }
       ]
@@ -267,6 +282,30 @@ applicationCount: 2,
   getVacancyById(id: string): Observable<Vacancy | undefined> {
     const vacancy = this.mockVacancies.find(v => v.id === id);
     return of(vacancy);
+  }
+
+  getApplicationsByVacancyId(vacancyId: string): any[] {
+    // Flatten all applications from all candidates, filtering out undefined applications
+    const allApplications = this.mockCandidates.flatMap(candidate => 
+      (candidate.applications || []).map(app => ({
+        ...app,
+        status: app.status || 'pending',
+        appliedAt: app.appliedAt || new Date(),
+        reviewedAt: app.reviewedAt,
+        notes: app.notes,
+        candidate: {
+          id: candidate.id,
+          firstName: candidate.firstName,
+          lastName: candidate.lastName,
+          email: candidate.email,
+          phone: candidate.phone,
+          score: candidate.score
+        }
+      }))
+    );
+    
+    // Filter applications for the specific vacancy
+    return allApplications.filter(app => app.vacancyId === vacancyId);
   }
 
   // ===== Candidate Methods =====

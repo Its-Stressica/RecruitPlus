@@ -1,19 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-export interface Candidate {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  status: string;
-  applicationDate: Date;
-}
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MockDataService } from '../../../core/services/mock-data.service';
+import { Candidate } from '../../../models/candidate.model';
 
 @Component({
   selector: 'app-candidate-list',
@@ -24,48 +18,60 @@ export interface Candidate {
     MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule
   ],
   templateUrl: './candidate-list.component.html',
   styleUrl: './candidate-list.component.css'
 })
-export class CandidateListComponent {
+export class CandidateListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'email', 'status', 'applicationDate', 'actions'];
   candidates: Candidate[] = [];
   isLoading = false;
+  error: string | null = null;
   totalItems = 0;
   pageSize = 10;
   pageIndex = 0;
 
-  constructor() {
-    // Initialize with sample data
+  constructor(
+    private mockDataService: MockDataService,
+    private snackBar: MatSnackBar
+  ) {}
+
+  ngOnInit(): void {
     this.loadCandidates();
   }
 
   loadCandidates(): void {
     this.isLoading = true;
+    this.error = null;
     
-    // Simulate API call
-    setTimeout(() => {
-      // Sample data - replace with actual API call
-      this.candidates = Array.from({ length: 25 }, (_, i) => ({
-        id: (i + 1).toString(),
-        firstName: `Candidate ${i + 1}`,
-        lastName: 'Doe',
-        email: `candidate${i + 1}@example.com`,
-        status: ['New', 'In Review', 'Interview', 'Hired', 'Rejected'][Math.floor(Math.random() * 5)],
-        applicationDate: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000)
-      }));
-      
-      this.totalItems = 100; // Total number of items from the server
-      this.isLoading = false;
-    }, 500);
+    this.mockDataService.getCandidates(this.pageIndex + 1, this.pageSize).subscribe({
+      next: (response) => {
+        this.candidates = response.data || [];
+        this.totalItems = response.total || 0;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading candidates:', error);
+        this.error = 'Failed to load candidates';
+        this.isLoading = false;
+        this.showError('Failed to load candidates');
+      }
+    });
   }
 
   onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadCandidates();
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      panelClass: ['error-snackbar']
+    });
   }
 
   viewCandidate(id: string): void {
