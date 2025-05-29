@@ -16,38 +16,31 @@
     <div class="vacancy-header">
       <h1>{{ vacancy.title || 'Vacancy Details' }}</h1>
       <div class="vacancy-meta">
-        <span class="meta-item" *ngIf="vacancy.department || vacancy.unit">
+        <span class="meta-item">
           <mat-icon>business</mat-icon>
-          {{ vacancy.department }}<span *ngIf="vacancy.department && vacancy.unit"> - </span>{{ vacancy.unit }}
+          Military Department
         </span>
-        <span class="meta-item" *ngIf="vacancy.location">
+        <span class="meta-item">
           <mat-icon>location_on</mat-icon>
-          {{ vacancy.location }}
+          Military Base
         </span>
-        <span class="meta-item" *ngIf="vacancy.positionType">
+        <span class="meta-item">
           <mat-icon>work</mat-icon>
-          {{ vacancy.positionType }}
+          Military Position
         </span>
-        <span class="meta-item" *ngIf="vacancy.experienceLevel">
+        <span class="meta-item">
           <mat-icon>star</mat-icon>
-          {{ vacancy.experienceLevel }}
-        </span>
-        <span class="meta-item" *ngIf="vacancy.salaryRange?.isPublic">
-          <mat-icon>attach_money</mat-icon>
-          {{ vacancy.salaryRange?.min }} - {{ vacancy.salaryRange?.max }} {{ vacancy.salaryRange?.currency }}
+          All Levels
         </span>
       </div>
       
       <div class="vacancy-status">
-        <span class="status-badge" [ngClass]="{
-          'status-active': vacancy.isActive,
-          'status-inactive': !vacancy.isActive
-        }">
-          {{ vacancy.isActive ? 'Active' : 'Inactive' }}
+        <span class="status-badge status-active">
+          {{ isActive ? 'Active' : 'Inactive' }}
         </span>
         <span class="applications-count">
           <mat-icon>people</mat-icon>
-          {{ vacancy.applicationCount || 0 }} applications
+          {{ applicationCount }} applications
         </span>
       </div>
     </div>
@@ -60,7 +53,7 @@
       <mat-tab label="Description">
         <div class="tab-content" *ngIf="vacancy">
           <h3>Job Description</h3>
-          <div [innerHTML]="vacancy.description"></div>
+          <div [innerHTML]="vacancy.description || 'No description available'"></div>
         </div>
       </mat-tab>
       
@@ -68,12 +61,11 @@
       <mat-tab label="Requirements">
         <div class="tab-content" *ngIf="vacancy">
           <h3>Requirements</h3>
-          <ul *ngIf="vacancy.requirements?.length; else noRequirements">
-            <li *ngFor="let req of vacancy.requirements">{{ req }}</li>
+          <ul>
+            <li>Military service eligibility</li>
+            <li>Physical fitness</li>
+            <li>Security clearance</li>
           </ul>
-          <ng-template #noRequirements>
-            <p>No requirements specified.</p>
-          </ng-template>
         </div>
       </mat-tab>
       
@@ -81,20 +73,19 @@
       <mat-tab label="Responsibilities">
         <div class="tab-content" *ngIf="vacancy">
           <h3>Responsibilities</h3>
-          <ul *ngIf="vacancy.responsibilities?.length; else noResponsibilities">
-            <li *ngFor="let resp of vacancy.responsibilities">{{ resp }}</li>
+          <ul>
+            <li>Perform assigned military duties</li>
+            <li>Follow orders from commanding officers</li>
+            <li>Maintain equipment and readiness</li>
           </ul>
-          <ng-template #noResponsibilities>
-            <p>No responsibilities specified.</p>
-          </ng-template>
         </div>
       </mat-tab>
 
       <!-- Candidates tab -->
-      <mat-tab label="Candidates" [disabled]="!vacancy.applicationCount">
+      <mat-tab label="Candidates" [disabled]="!applicationCount">
         <div class="tab-content">
           <div class="candidates-header">
-            <h3>Candidate Applications ({{ applications.length || 0 }})</h3>
+            <h3>Candidate Applications ({{ applicationCount }})</h3>
           </div>
           
           <table mat-table [dataSource]="applications || []" class="mat-elevation-z1">
@@ -124,7 +115,7 @@
                     class="progress-bar"
                     mode="determinate"
                     [value]="getApplicationProgress(application)"
-                    [color]="(applications.length / (vacancy.availablePositions || 1)) >= 1 ? 'warn' : 'primary'"
+                    [color]="(applicationCount / (availablePositions || 1)) >= 1 ? 'warn' : 'primary'"
                   ></mat-progress-bar>
                   <span class="score-value">{{ application.score }}%</span>
                 </div>

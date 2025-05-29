@@ -11,7 +11,7 @@
           <mat-icon>people</mat-icon>
           See All Candidates
         </button>
-        <button mat-raised-button color="primary" (click)="createNewVacancy()" class="create-button">
+        <button mat-raised-button color="primary" routerLink="/vacancies/new" class="create-button">
           <mat-icon>add</mat-icon>
           Create New Vacancy
         </button>
@@ -40,15 +40,15 @@
         <div class="vacancy-header-content">
           <mat-card-title>{{ vacancy.title }}</mat-card-title>
           <mat-card-subtitle>
-            <span class="department">{{ vacancy.department }}</span>
+            <span class="department">Military Department</span>
             <span class="divider">•</span>
             <span class="location">
-              {{ vacancy.location || 'Various Locations' }}
+              Military Base
             </span>
           </mat-card-subtitle>
         </div>
-        <span class="status-badge" [ngClass]="{'active': vacancy.isActive, 'inactive': !vacancy.isActive}">
-          {{ vacancy.isActive ? 'Active' : 'Inactive' }}
+        <span class="status-badge active">
+          Active
         </span>
       </mat-card-header>
       
@@ -62,7 +62,7 @@
             </div>
             <div class="quota-item">
               <span class="quota-label">Applications:</span>
-              <span class="quota-value">{{ vacancy.applicationCount || 0 }}</span>
+              <span class="quota-value">0</span>
             </div>
           </div>
           <div class="progress-text">
@@ -75,8 +75,8 @@
             <span>Posted: {{ formatDate(vacancy.createdAt) }}</span>
           </div>
           <div class="meta-item">
-            <span [class.expired]="isDeadlinePassed(vacancy.deadline)">
-              Deadline: {{ formatDate(vacancy.deadline) }}
+            <span>
+              Created: {{ formatDate(vacancy.createdAt) }}
             </span>
           </div>
         </div>
@@ -87,7 +87,7 @@
           View Details
         </button>
         <button mat-button [routerLink]="['/vacancies', vacancy.id, 'applications']">
-          View Applications ({{ vacancy.applicationCount || 0 }})
+          View Applications (0)
         </button>
         <button mat-button color="warn" (click)="confirmDeleteVacancy(vacancy)">
           Delete
@@ -95,15 +95,4 @@
       </mat-card-actions>
     </mat-card>
   </div>
-
-  <!-- Pagination -->
-  <mat-paginator 
-    *ngIf="!isLoading && totalItems > pageSize"
-    [length]="totalItems"
-    [pageSize]="pageSize"
-    [pageIndex]="pageIndex"
-    [pageSizeOptions]="[5, 10, 25, 100]"
-    (page)="onPageChange($event)"
-    aria-label="Select page">
-  </mat-paginator>
 </div>
