@@ -26,7 +26,19 @@ export interface Application {
   vacancyId: string;
   score: number;
   isChosenByAlgorithm: boolean;
+  status: 'pending' | 'reviewed' | 'accepted' | 'rejected';
+  notes?: string;
+  appliedAt: Date;
+  reviewedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
   vacancy?: VacancyBasic;
+  candidate?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email?: string;
+    phone?: string;
+    score?: number;
+  };
 }
