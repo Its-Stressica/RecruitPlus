@@ -1,7 +1,9 @@
+using Microsoft.Extensions.Logging;
 using MilitaryRecruitment.BusinessLogic.DTOs.Application;
 using MilitaryRecruitment.DataAccess;
 using MilitaryRecruitment.DataAccess.Entities;
 using MilitaryRecruitment.DataAccess.Repositories;
+using System.Diagnostics;
 
 namespace MilitaryRecruitment.BusinessLogic.Services;
 
@@ -12,16 +14,20 @@ public class ApplicationService
     private readonly CandidateRepository _candidateRepository;
     private readonly VacancyRepository _vacancyRepository;
 
+    private readonly ILogger<ApplicationService> _logger;
+
     public ApplicationService(
         UnitOfWork unitOfWork,
         ApplicationRepository applicationRepository,
         CandidateRepository candidateRepository,
-        VacancyRepository vacancyRepository)
+        VacancyRepository vacancyRepository,
+        ILogger<ApplicationService> logger)
     {
         _unitOfWork = unitOfWork;
         _applicationRepository = applicationRepository;
         _candidateRepository = candidateRepository;
         _vacancyRepository = vacancyRepository;
+        _logger = logger;
     }
 
     public IEnumerable<ApplicationGetDto> GetAllApplications()
@@ -99,6 +105,193 @@ public class ApplicationService
             _applicationRepository.Delete(application);
             _unitOfWork.SaveChanges();
         }
+    }
+
+    private Dictionary<Guid, List<Application>> AssignInitialCandidates()
+    {
+        var assignments = new Dictionary<Guid, List<Application>>();
+        var vacancies = _vacancyRepository.GetAll().ToList();
+        var applications = _applicationRepository.GetAll().ToList();
+        var candidates = _candidateRepository.GetAll().ToList();
+
+        foreach (var vacancy in vacancies)
+        {
+            assignments[vacancy.Id] = new List<Application>();
+        }
+
+        foreach (var candidate in candidates)
+        {
+            var candidateApps = applications
+                .Where(a => a.CandidateId == candidate.Id)
+                .ToList();
+
+            if (!candidateApps.Any())continue;
+
+            var maxScore = candidateApps.Max(a => a.Score);
+            var bestApps = candidateApps.Where(a => a.Score == maxScore).ToList();
+
+            Application bestApp;
+            if (bestApps.Count == 1)
+            {
+                bestApp = bestApps.Single();
+            }
+            else
+            {
+                bestApp = bestApps
+                    .OrderByDescending(a => 
+                        vacancies.First(v => v.Id == a.VacancyId).Priority)
+                    .First();
+            }
+
+            assignments[bestApp.VacancyId].Add(bestApp);
+            bestApp.IsChosenByAlgorythm = true;
+            _applicationRepository.Update(bestApp);
+            _unitOfWork.SaveChanges();
+        }
+
+        _unitOfWork.SaveChanges();
+        return assignments;
+    }
+
+    private List<Vacancy> FindOverquotaVacancies(Dictionary<Guid, List<Application>> assignments)
+    {
+        var vacancies = _vacancyRepository.GetAll().ToList();
+        var overquota = new List<Vacancy>();
+
+        foreach (var vacancy in vacancies)
+        {
+            var assigned = assignments[vacancy.Id];
+            if (assigned.Count > vacancy.Quota)
+            {
+                overquota.Add(vacancy);
+            }
+        }
+
+        return overquota;
+    }
+
+    private (Guid, double) FindBestReplacementForCandidate(Application candidateApp, List<Application> applications)
+    {
+        var currentVacancyId = candidateApp.VacancyId;
+        var candidateApps = applications
+            .Where(a => a.CandidateId == candidateApp.CandidateId && 
+                         a.VacancyId != currentVacancyId && 
+                         a.WasFullyCheckedByAlgorythm == false)
+            .ToList();
+
+        if (!candidateApps.Any())
+        {
+            return (Guid.Empty, 0);
+        }
+
+        var bestApp = candidateApps
+            .OrderByDescending(a => a.Score)
+            .First();
+
+        return (bestApp.VacancyId, bestApp.Score);
+    }
+
+    private bool ReplaceCandidate(Dictionary<Guid, List<Application>> assignments, List<Application> applications, Vacancy vacancyToFix)
+    {
+        var applicationsOfCandidatesToReplace = assignments[vacancyToFix.Id];
+        var scoresDiff = new List<double>();
+        var replacementOptions = new List<(Application, Guid, double)>();
+
+        foreach (var app in applicationsOfCandidatesToReplace)
+        {
+            var (replacementVacancyId, replacementScore) = FindBestReplacementForCandidate(app, applications);
+            var originalScore = app.Score;
+            var diff = replacementScore != 0 ? originalScore - replacementScore : double.MaxValue;
+            scoresDiff.Add(diff);
+            replacementOptions.Add((app, replacementVacancyId, replacementScore));
+            // replacementOptions.Add((app, replacementVacancyId, diff));
+        }
+
+        if (replacementOptions.All(r => r.Item3 == 0))
+        {
+            // Remove the worst candidate if no better replacements are possible
+            var worstApp = applicationsOfCandidatesToReplace
+                .OrderBy(a => a.Score)
+                .First();
+
+            assignments[vacancyToFix.Id].Remove(worstApp);
+            worstApp.IsChosenByAlgorythm = false;
+            _applicationRepository.Update(worstApp);
+            _unitOfWork.SaveChanges();
+            return false;
+        }
+
+        // Find replacement with minimum score difference
+        var minDiffIndex = scoresDiff.IndexOf(scoresDiff.Min());
+        var (appToReplace, replacementVac, _) = replacementOptions[minDiffIndex];
+
+        // Remove candidate from original vacancy
+        assignments[vacancyToFix.Id].Remove(appToReplace);
+        appToReplace.IsChosenByAlgorythm = false;
+        appToReplace.WasFullyCheckedByAlgorythm = true;
+        _applicationRepository.Update(appToReplace);
+        _unitOfWork.SaveChanges();
+
+        // If there's a better replacement, add to new vacancy
+        if (replacementVac != Guid.Empty)
+        {
+            var newAssignmentApp = applications
+                .First(a => a.CandidateId == appToReplace.CandidateId && 
+                           a.VacancyId == replacementVac);
+
+            assignments[replacementVac].Add(newAssignmentApp);
+            newAssignmentApp.IsChosenByAlgorythm = true;
+            _applicationRepository.Update(newAssignmentApp);
+            _unitOfWork.SaveChanges();
+        }
+
+        _unitOfWork.SaveChanges();
+        return true;
+    }
+
+    public IEnumerable<AlgorithmResultDto> RunMakAlgorithm()
+    {
+        var assignments = AssignInitialCandidates();
+        int step = 1;
+
+        while (true)
+        {
+            var overquotaVacancies = FindOverquotaVacancies(assignments);
+            if (!overquotaVacancies.Any()) break;
+
+            foreach (var vacancy in overquotaVacancies)
+            {
+                Debug.WriteLine($"Step {step}: Vacancy '{vacancy.Title}' exceeds quote ({(assignments[vacancy.Id].Count())} > {vacancy.Quota})");
+                var canContinue = ReplaceCandidate(assignments, _applicationRepository.GetAll().ToList(), vacancy);
+                if (!canContinue)
+                {
+                    Debug.WriteLine("No better chances available. Optimization stopped");
+                    break;
+                }
+                step++;
+            }
+        }
+
+        // Convert to DTO with names
+        var results = new List<AlgorithmResultDto>();
+        foreach (var vacancyId in assignments.Keys)
+        {
+            var vacancy = _vacancyRepository.GetById(vacancyId);
+            foreach (var application in assignments[vacancyId])
+            {
+                var candidate = _candidateRepository.GetById(application.CandidateId);
+                results.Add(new AlgorithmResultDto
+                {
+                    Id = application.Id,
+                    CandidateName = $"{candidate.FirstName} {candidate.LastName}",
+                    VacancyTitle = vacancy.Title,
+                    Score = application.Score,
+                    IsChosenByAlgorythm = application.IsChosenByAlgorythm
+                });
+            }
+        }
+
+        return results;
     }
 
     public IEnumerable<ApplicationGetDto> GetApplicationsByCandidateId(Guid candidateId)

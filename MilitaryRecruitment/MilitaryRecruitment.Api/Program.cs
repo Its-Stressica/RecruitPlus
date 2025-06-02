@@ -7,6 +7,13 @@ using MilitaryRecruitment.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -28,13 +35,23 @@ builder.Services.AddTransient<ApplicationRepository>();
 
 builder.Services.AddTransient<CandidateService>();
 builder.Services.AddTransient<VacancyService>();
-builder.Services.AddTransient<ApplicationService>();
+builder.Services.AddTransient((sp) =>
+    new ApplicationService(
+        sp.GetRequiredService<UnitOfWork>(),
+        sp.GetRequiredService<ApplicationRepository>(),
+        sp.GetRequiredService<CandidateRepository>(),
+        sp.GetRequiredService<VacancyRepository>(),
+        sp.GetRequiredService<ILogger<ApplicationService>>()));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Configure logging levels
+app.Logger.LogInformation("Application starting up");
+app.Logger.LogInformation("Logging is configured");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

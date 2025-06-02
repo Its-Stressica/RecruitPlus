@@ -7,6 +7,7 @@ public class Application
     public Guid VacancyId { get; set; }
     public double Score { get; set; }
     public bool IsChosenByAlgorythm { get; set; } = false;
+    public bool WasFullyCheckedByAlgorythm { get; set; } = false;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 

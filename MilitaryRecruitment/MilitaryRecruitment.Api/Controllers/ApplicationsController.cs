@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MilitaryRecruitment.BusinessLogic.DTOs.Application;
@@ -81,5 +82,18 @@ public class ApplicationsController : ControllerBase
             return NotFound();
         }
         return Ok(application);
+    }
+
+    [HttpPost("run-algorithm")]
+    //[Authorize]
+    public IActionResult RunAssignmentAlgorithm()
+    {
+        Debug.WriteLine("Starting RunAssignmentAlgorithm");
+        var results = _applicationService.RunMakAlgorithm();
+        Debug.WriteLine($"Algorithm completed. Results count: {results.Count()}");
+        return Ok(new
+        {
+            assignments = results
+        });
     }
 }
