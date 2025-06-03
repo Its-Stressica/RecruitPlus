@@ -7,6 +7,8 @@ public class ApplicationGetDto
 {
     public Guid Id { get; set; }
     public Guid CandidateId { get; set; }
+    public string CandidateFirstName { get; set; } = string.Empty;
+    public string CandidateLastName { get; set; } = string.Empty;
     public Guid VacancyId { get; set; }
     public double Score { get; set; }
     public bool IsChosenByAlgorythm { get; set; }

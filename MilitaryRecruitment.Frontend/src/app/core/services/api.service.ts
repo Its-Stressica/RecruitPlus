@@ -6,7 +6,8 @@ import { MockDataService } from './mock-data.service';
 
 import { environment } from '../../../environments/environment';
 import { Vacancy, VacancyListResponse } from '../../models/vacancy.model';
-import { Candidate, Application } from '../../models/candidate.model';
+import { Candidate } from '../../models/candidate.model';
+import { Application } from '../../models/application.model';
 
 export interface PaginationParams {
   page?: number;
@@ -22,7 +23,7 @@ export interface PaginationParams {
 export class ApiService {
   private readonly apiUrl = environment.apiUrl;
 
-  private useMockData = true; // Set to false when real API is available
+  private useMockData = false; // Now using real API
 
   constructor(
     private http: HttpClient,
@@ -52,6 +53,32 @@ export class ApiService {
   }
 
   // ===== Vacancy Endpoints =====
+
+  // ===== Application Endpoints =====
+
+  getApplications(params?: PaginationParams): Observable<Application[]> {
+    return this.http.get<Application[]>(`${this.apiUrl}/applications`, { params: params ? this.buildParams(params) : undefined });
+  }
+
+  getApplicationById(id: string): Observable<Application> {
+    return this.http.get<Application>(`${this.apiUrl}/applications/${id}`);
+  }
+
+  createApplication(application: Partial<Application>): Observable<any> {
+    return this.http.post(`${this.apiUrl}/applications`, application);
+  }
+
+  deleteApplication(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/applications/${id}`);
+  }
+
+  resetAssignments(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/applications/reset-assignments`, {});
+  }
+
+  // ===== End Application Endpoints =====
+
+  // ===== Candidate Endpoints =====
   getVacancies(params: PaginationParams = { page: 1, pageSize: 10 }): Observable<VacancyListResponse> {
     if (this.useMockData) {
       return this.mockDataService.getVacancies(params.page || 1, params.pageSize || 10);

@@ -7,8 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { ApiService } from '../../../core/services/api.service';
-import { Application } from '../../../models/vacancy.model';
+import { ApplicationService } from '../../../core/services/application.service';
+import { Application } from '../../../models/application.model';
 
 @Component({
   selector: 'app-application-list',
@@ -32,12 +32,15 @@ export class ApplicationListComponent implements OnInit {
   vacancyTitle: string = 'Vacancy';
   displayedColumns: string[] = ['candidate', 'score', 'status', 'appliedAt', 'actions'];
   applications: Application[] = [];
+  // Optionally store a fallback for candidate names if needed
+  // candidateNames: { [applicationId: string]: string } = {};
+
   errorMessage: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiService: ApiService,
+    private applicationService: ApplicationService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -50,28 +53,22 @@ export class ApplicationListComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     
-    // First, get the vacancy details to show its title
-    this.apiService.getVacancy(this.vacancyId).subscribe({
-      next: (vacancy) => {
-        this.vacancyTitle = vacancy.title;
-        
-        // Then get the applications for this vacancy
-        this.apiService.getApplicationsByVacancy(this.vacancyId).subscribe({
-          next: (applications) => {
-            this.applications = applications;
-            this.isLoading = false;
-          },
-          error: (error) => {
-            console.error('Error loading applications:', error);
-            this.errorMessage = 'Failed to load applications. Please try again later.';
-            this.snackBar.open(this.errorMessage, 'Close', { duration: 5000 });
-            this.isLoading = false;
-          }
-        });
+    if (!this.vacancyId) {
+      this.errorMessage = 'No vacancy ID provided';
+      this.snackBar.open(this.errorMessage, 'Close', { duration: 5000 });
+      this.isLoading = false;
+      return;
+    }
+
+    // Get the applications for this vacancy
+    this.applicationService.getApplications({ vacancyId: this.vacancyId }).subscribe({
+      next: (applications) => {
+        this.applications = applications;
+        this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading vacancy:', error);
-        this.errorMessage = 'Failed to load vacancy details. Please try again later.';
+        console.error('Error loading applications:', error);
+        this.errorMessage = 'Failed to load applications. Please try again later.';
         this.snackBar.open(this.errorMessage, 'Close', { duration: 5000 });
         this.isLoading = false;
       }
@@ -79,9 +76,13 @@ export class ApplicationListComponent implements OnInit {
   }
 
   viewApplication(applicationId: string): void {
-    // TODO: Implement navigation to application details
     console.log('View application:', applicationId);
-    this.router.navigate(['/applications', applicationId]);
+    const application = this.applications.find(app => app.id === applicationId);
+    if (application) {
+      this.router.navigate(['/applications', applicationId]);
+    } else {
+      this.snackBar.open('Application not found', 'Close', { duration: 3000 });
+    }
   }
 
   reviewApplication(applicationId: string): void {
@@ -94,17 +95,17 @@ export class ApplicationListComponent implements OnInit {
     // Find the application to get the candidate's name for the filename
     const application = this.applications.find(app => app.id === applicationId);
     
-    // Validate application and candidate data
+    // Validate application data
     if (!application) {
       this.snackBar.open('Error: Application not found', 'Close', { duration: 5000 });
       return;
     }
     
-    const candidate = application.candidate;
-    if (!candidate) {
-      this.snackBar.open('Error: Candidate information not available', 'Close', { duration: 5000 });
-      return;
-    }
+    // Get candidate name from application properties
+    const firstName = application.candidateFirstName || 'user';
+    const lastName = application.candidateLastName || new Date().getTime().toString();
+    const candidateName = `${firstName} ${lastName}`.trim();
+    console.log('Candidate Name:', candidateName);
 
     // In a real application, this would call an API endpoint to get the resume
     console.log('Downloading resume for application:', applicationId);
@@ -116,8 +117,6 @@ export class ApplicationListComponent implements OnInit {
     const downloadWithRetry = (retryCount = 0) => {
       try {
         // Generate a safe filename
-        const firstName = candidate.firstName || 'user';
-        const lastName = candidate.lastName || new Date().getTime().toString();
         const fileName = `resume_${firstName}_${lastName}.pdf`;
         
         // Create a mock file (in a real app, this would come from the API)

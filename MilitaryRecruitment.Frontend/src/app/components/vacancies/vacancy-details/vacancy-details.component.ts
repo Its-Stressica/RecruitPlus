@@ -16,7 +16,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 
-import { Application } from '../../../models/vacancy.model';
+import { Application } from '../../../models/application.model';
 import { VacancyService, VacancyGetDto } from '../../../core/services/vacancy.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 

@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '../../../../src/environments/environment';
-import { Application } from '../../models/vacancy.model';
+import { Application } from '../../models/application.model';
 import { VacancyGetDto, VacancyCreateDto } from '../../models/vacancy.dto';
 
 // Re-export DTOs for easier imports in other files

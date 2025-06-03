@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Vacancy, VacancyListResponse } from '../../models/vacancy.model';
-import { Candidate, Application } from '../../models/candidate.model';
+import { Candidate } from '../../models/candidate.model';
+import { Application } from '../../models/application.model';
 
 @Injectable({
   providedIn: 'root'
@@ -156,6 +157,8 @@ applicationCount: 2,
         {
           id: 'app1',
           candidateId: '1',
+          candidateFirstName: 'John',
+          candidateLastName: 'Doe',
           vacancyId: '1',
           score: 95,
           isChosenByAlgorithm: true,
@@ -189,6 +192,8 @@ applicationCount: 2,
         {
           id: 'app2',
           candidateId: '2',
+          candidateFirstName: 'Jane',
+          candidateLastName: 'Smith',
           vacancyId: '2',
           score: 92,
           isChosenByAlgorithm: true,
@@ -210,6 +215,8 @@ applicationCount: 2,
         {
           id: 'app3',
           candidateId: '2',
+          candidateFirstName: 'Jane',
+          candidateLastName: 'Smith',
           vacancyId: '1',
           score: 88,
           isChosenByAlgorithm: false,
@@ -242,6 +249,8 @@ applicationCount: 2,
         {
           id: 'app3',
           candidateId: '1',
+          candidateFirstName: 'John',
+          candidateLastName: 'Doe',
           vacancyId: '2',
           score: 92,
           isChosenByAlgorithm: true,

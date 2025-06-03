@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MockDataService } from '../../../core/services/mock-data.service';
+import { CandidateService } from '../../../core/services/candidate.service';
 import { Candidate } from '../../../models/candidate.model';
 import { CandidateFormComponent } from '../candidate-form/candidate-form.component';
 
@@ -39,7 +39,7 @@ export class CandidateListComponent implements OnInit {
   pageIndex = 0;
 
   constructor(
-    private mockDataService: MockDataService,
+    private candidateService: CandidateService,
     private snackBar: MatSnackBar,
     private router: Router,
     private dialog: MatDialog
@@ -53,17 +53,58 @@ export class CandidateListComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
     
-    this.mockDataService.getCandidates(this.pageIndex + 1, this.pageSize).subscribe({
-      next: (response) => {
-        this.candidates = response.data || [];
-        this.totalItems = response.total || 0;
+    const params = {
+      page: (this.pageIndex + 1).toString(),
+      pageSize: this.pageSize.toString()
+    };
+
+    console.log('Fetching candidates with params:', params);
+    console.log('API URL:', this.candidateService['apiUrl']);
+    
+    this.candidateService.getCandidates(params).subscribe({
+      next: (response: any) => {
+        console.log('Raw API response:', JSON.stringify(response, null, 2));
+        
+        if (!response) {
+          console.error('Empty response received from API');
+          this.error = 'Received empty response from server';
+          this.isLoading = false;
+          return;
+        }
+        
+        // Check if response is an array directly or if it's nested under a data property
+        if (Array.isArray(response)) {
+          this.candidates = response;
+          this.totalItems = response.length;
+        } else if (response.data && Array.isArray(response.data)) {
+          this.candidates = response.data;
+          this.totalItems = response.total || response.data.length;
+        } else {
+          console.error('Unexpected response format:', response);
+          this.error = 'Unexpected response format from server';
+          this.candidates = [];
+          this.totalItems = 0;
+        }
+        
         this.isLoading = false;
+        console.log(`Processed ${this.candidates.length} candidates`);
+        console.log('First candidate:', this.candidates[0]);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading candidates:', error);
-        this.error = 'Failed to load candidates';
+        console.error('Error status:', error.status);
+        console.error('Error message:', error.message);
+        
+        let errorMessage = 'Failed to load candidates';
+        if (error.status === 0) {
+          errorMessage = 'Cannot connect to the server. Please check your connection and try again.';
+        } else if (error.error) {
+          errorMessage = error.error.message || error.statusText || errorMessage;
+        }
+        
+        this.error = errorMessage;
         this.isLoading = false;
-        this.showError('Failed to load candidates');
+        this.showError(errorMessage);
       }
     });
   }

@@ -1,27 +1,4 @@
-// Move Candidate interface here to avoid circular dependency
-export interface CandidateBasic {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email?: string;
-  phone?: string;
-  score?: number;
-}
-
-export interface Application {
-  id: string;
-  candidateId: string;
-  vacancyId: string;
-  score: number;
-  isChosenByAlgorithm: boolean;
-  status: 'pending' | 'reviewed' | 'accepted' | 'rejected';
-  notes?: string;
-  appliedAt: Date;
-  reviewedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-  candidate?: CandidateBasic;
-}
+import { Application } from '../models/application.model';
 
 export interface Vacancy {
   id: string;

@@ -96,4 +96,11 @@ public class ApplicationsController : ControllerBase
             assignments = results
         });
     }
+
+    [HttpPost("reset-assignments")]
+    public IActionResult ResetAssignments()
+    {
+        _applicationService.ResetAllAssignments();
+        return Ok("All application assignments have been reset.");
+    }
 }

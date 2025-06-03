@@ -14,7 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TruncatePipe } from '../../../shared/pipes/truncate.pipe';
 import { Candidate } from '../../../models/candidate.model';
-import { Application, CandidateBasic } from '../../../models/vacancy.model';
+import { Application, CreateApplicationDto } from '../../../models/application.model';
 import { VacancyGetDto } from '../../../models/vacancy.dto';
 
 export interface VacancyOption {
@@ -158,33 +158,24 @@ export class CandidateFormComponent implements OnInit {
       return;
     }
 
-    const application: Application = {
-      id: Math.random().toString(36).substr(2, 9),
-      candidateId: this.isEditMode && this.data.candidate ? this.data.candidate.id : '',
+    const candidateId = this.isEditMode && this.data.candidate ? this.data.candidate.id : Math.random().toString(36).substr(2, 9);
+    
+    const applicationDto: CreateApplicationDto = {
+      candidateId: candidateId,
       vacancyId: selectedVacancy.id,
-      score: formValue.score,
+      score: formValue.score || 0,
       isChosenByAlgorithm: false,
       status: 'pending',
-      appliedAt: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      candidate: {
-        id: this.isEditMode && this.data.candidate ? this.data.candidate.id : '',
-        firstName: formValue.firstName,
-        lastName: formValue.lastName,
-        email: formValue.email,
-        phone: formValue.phone,
-        score: formValue.score
-      }
+      appliedAt: new Date().toISOString()
     };
 
-    const candidate: CandidateBasic = {
-      id: this.isEditMode && this.data.candidate ? this.data.candidate.id : Math.random().toString(36).substr(2, 9),
-      firstName: formValue.firstName,
-      lastName: formValue.lastName,
-      email: formValue.email,
-      phone: formValue.phone,
-      score: formValue.score
+    const candidate: Candidate = {
+      id: candidateId,
+      firstName: formValue.firstName || '',
+      lastName: formValue.lastName || '',
+      email: formValue.email || '',
+      phone: formValue.phone || '',
+      score: formValue.score || 0
     };
     
     // Simulate API call
@@ -192,7 +183,14 @@ export class CandidateFormComponent implements OnInit {
       this.isSubmitting = false;
       this.dialogRef.close({
         candidate,
-        application
+        application: {
+          ...applicationDto,
+          id: Math.random().toString(36).substr(2, 9),
+          candidateFirstName: candidate.firstName,
+          candidateLastName: candidate.lastName,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
       });
     }, 1000);
   }

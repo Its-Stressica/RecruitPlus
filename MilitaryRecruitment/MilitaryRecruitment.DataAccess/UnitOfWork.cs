@@ -150,7 +150,7 @@ public class UnitOfWork
                     Id = Guid.NewGuid(),
                     CandidateId = candidates.First(c => c.FirstName == "Charlie" && c.LastName == "Brown").Id,
                     VacancyId = vacancies.First(v => v.Title == "Tester").Id,
-                    Score = 73,
+                    Score = 83,
                     IsChosenByAlgorythm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now

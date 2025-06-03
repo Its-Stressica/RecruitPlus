@@ -30,18 +30,36 @@ public class ApplicationService
         _logger = logger;
     }
 
+    public void ResetAllAssignments()
+    {
+        var applications = _applicationRepository.GetAll().ToList();
+        foreach (var app in applications)
+        {
+            app.IsChosenByAlgorythm = false;
+            app.WasFullyCheckedByAlgorythm = false;
+            _applicationRepository.Update(app);
+        }
+        _unitOfWork.SaveChanges();
+    }
+
     public IEnumerable<ApplicationGetDto> GetAllApplications()
     {
         var applications = _applicationRepository.GetAll();
-        return applications.Select(a => new ApplicationGetDto
+        return applications.Select(a => 
         {
-            Id = a.Id,
-            CandidateId = a.CandidateId,
-            VacancyId = a.VacancyId,
-            Score = a.Score,
-            IsChosenByAlgorythm = a.IsChosenByAlgorythm,
-            CreatedAt = a.CreatedAt,
-            UpdatedAt = a.UpdatedAt
+            var candidate = _candidateRepository.GetById(a.CandidateId);
+            return new ApplicationGetDto
+            {
+                Id = a.Id,
+                CandidateId = a.CandidateId,
+                CandidateFirstName = candidate?.FirstName ?? string.Empty,
+                CandidateLastName = candidate?.LastName ?? string.Empty,
+                VacancyId = a.VacancyId,
+                Score = a.Score,
+                IsChosenByAlgorythm = a.IsChosenByAlgorythm,
+                CreatedAt = a.CreatedAt,
+                UpdatedAt = a.UpdatedAt
+            };
         });
     }
 
@@ -57,6 +75,8 @@ public class ApplicationService
         {
             Id = application.Id,
             CandidateId = application.CandidateId,
+            CandidateFirstName = candidate?.FirstName ?? string.Empty,
+            CandidateLastName = candidate?.LastName ?? string.Empty,
             VacancyId = application.VacancyId,
             Score = application.Score,
             IsChosenByAlgorythm = application.IsChosenByAlgorythm,
@@ -89,6 +109,8 @@ public class ApplicationService
         {
             Id = createdApplication.Id,
             CandidateId = createdApplication.CandidateId,
+            CandidateFirstName = candidate?.FirstName ?? string.Empty,
+            CandidateLastName = candidate?.LastName ?? string.Empty,
             VacancyId = createdApplication.VacancyId,
             Score = createdApplication.Score,
             IsChosenByAlgorythm = createdApplication.IsChosenByAlgorythm,
@@ -297,10 +319,13 @@ public class ApplicationService
     public IEnumerable<ApplicationGetDto> GetApplicationsByCandidateId(Guid candidateId)
     {
         var applications = _applicationRepository.GetByCandidateId(candidateId);
+        var candidate = _candidateRepository.GetById(candidateId);
         return applications.Select(a => new ApplicationGetDto
         {
             Id = a.Id,
             CandidateId = a.CandidateId,
+            CandidateFirstName = candidate?.FirstName ?? string.Empty,
+            CandidateLastName = candidate?.LastName ?? string.Empty,
             VacancyId = a.VacancyId,
             Score = a.Score,
             IsChosenByAlgorythm = a.IsChosenByAlgorythm,
@@ -312,25 +337,34 @@ public class ApplicationService
     public IEnumerable<ApplicationGetDto> GetApplicationsByVacancyId(Guid vacancyId)
     {
         var applications = _applicationRepository.GetByVacancyId(vacancyId);
-        return applications.Select(a => new ApplicationGetDto
+        return applications.Select(a => 
         {
-            Id = a.Id,
-            CandidateId = a.CandidateId,
-            VacancyId = a.VacancyId,
-            Score = a.Score,
-            IsChosenByAlgorythm = a.IsChosenByAlgorythm,
-            CreatedAt = a.CreatedAt,
-            UpdatedAt = a.UpdatedAt
+            var candidate = _candidateRepository.GetById(a.CandidateId);
+            return new ApplicationGetDto
+            {
+                Id = a.Id,
+                CandidateId = a.CandidateId,
+                CandidateFirstName = candidate?.FirstName ?? string.Empty,
+                CandidateLastName = candidate?.LastName ?? string.Empty,
+                VacancyId = a.VacancyId,
+                Score = a.Score,
+                IsChosenByAlgorythm = a.IsChosenByAlgorythm,
+                CreatedAt = a.CreatedAt,
+                UpdatedAt = a.UpdatedAt
+            };
         });
     }
 
     public IEnumerable<ApplicationGetDto> GetApplicationByCandidateIdAndVacancyId(Guid candidateId, Guid vacancyId)
     {
         var applications = _applicationRepository.GetByCandidateIdAndVacancyId(candidateId, vacancyId);
+        var candidate = _candidateRepository.GetById(candidateId);
         return applications.Select(a => new ApplicationGetDto
         {
             Id = a.Id,
             CandidateId = a.CandidateId,
+            CandidateFirstName = candidate?.FirstName ?? string.Empty,
+            CandidateLastName = candidate?.LastName ?? string.Empty,
             VacancyId = a.VacancyId,
             Score = a.Score,
             IsChosenByAlgorythm = a.IsChosenByAlgorythm,
