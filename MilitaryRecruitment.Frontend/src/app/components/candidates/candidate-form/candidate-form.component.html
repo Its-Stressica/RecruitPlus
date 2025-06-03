@@ -1,0 +1,134 @@
+<div class="form-container">
+  <mat-card class="form-card mat-elevation-z8">
+    <div class="card-header">
+      <h2 class="card-title">
+        <mat-icon class="header-icon">{{ isEditMode ? 'edit' : 'person_add' }}</mat-icon>
+        {{ isEditMode ? 'Edit Candidate' : 'Add New Candidate' }}
+      </h2>
+      <p class="card-subtitle">Please fill in the candidate details below</p>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <form [formGroup]="candidateForm" (ngSubmit)="onSubmit()" class="candidate-form">
+      <mat-card-content class="form-content">
+        <!-- Personal Info Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon class="section-icon">person</mat-icon>
+            Personal Information
+          </h3>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>First Name</mat-label>
+              <input matInput formControlName="firstName" placeholder="John">
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-hint>Required</mat-hint>
+              <mat-error *ngIf="firstName?.hasError('required')">First name is required</mat-error>
+              <mat-error *ngIf="firstName?.hasError('minlength')">Minimum 2 characters required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Last Name</mat-label>
+              <input matInput formControlName="lastName" placeholder="Doe">
+              <mat-icon matSuffix>person_outline</mat-icon>
+              <mat-hint>Required</mat-hint>
+              <mat-error *ngIf="lastName?.hasError('required')">Last name is required</mat-error>
+              <mat-error *ngIf="lastName?.hasError('minlength')">Minimum 2 characters required</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Contact Info Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon class="section-icon">contact_mail</mat-icon>
+            Contact Information
+          </h3>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email" placeholder="john.doe@example.com">
+              <mat-icon matSuffix>email</mat-icon>
+              <mat-hint>Required</mat-hint>
+              <mat-error *ngIf="email?.hasError('required')">Email is required</mat-error>
+              <mat-error *ngIf="email?.hasError('email')">Please enter a valid email</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Phone</mat-label>
+              <input matInput type="tel" formControlName="phone" placeholder="+1234567890">
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-hint>Required</mat-hint>
+              <mat-error *ngIf="phone?.hasError('required')">Phone is required</mat-error>
+              <mat-error *ngIf="phone?.hasError('pattern')">Please enter a valid phone number</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Application Details Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon class="section-icon">work</mat-icon>
+            Application Details
+          </h3>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Vacancy</mat-label>
+              <mat-select formControlName="vacancy" placeholder="Select position">
+                <mat-option *ngIf="isLoadingVacancies" disabled>
+                  <div class="vacancy-loading">
+                    <mat-spinner diameter="20"></mat-spinner>
+                    <span>Loading vacancies...</span>
+                  </div>
+                </mat-option>
+                <mat-option *ngIf="!isLoadingVacancies && vacancies.length === 0" disabled>
+                  No vacancies available
+                </mat-option>
+                <mat-option *ngFor="let vacancy of vacancies" [value]="vacancy.id" class="vacancy-option">
+                  <div class="vacancy-option-content">
+                    <div class="vacancy-title">{{ vacancy.title }}</div>
+                    <div class="vacancy-description" *ngIf="vacancy.description" [matTooltip]="vacancy.description">
+                      {{ (vacancy.description.length > 60) ? (vacancy.description | slice:0:60) + '...' : vacancy.description }}
+                    </div>
+                  </div>
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>work_outline</mat-icon>
+              <mat-hint>Select the position you're applying for</mat-hint>
+              <mat-error *ngIf="vacancy?.hasError('required')">Please select a vacancy</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Score</mat-label>
+              <input matInput type="number" formControlName="score" placeholder="0-100" min="0" max="100">
+              <mat-icon matSuffix>score</mat-icon>
+              <mat-hint>Score (0-100)</mat-hint>
+              <mat-error *ngIf="score?.hasError('required')">Score is required</mat-error>
+              <mat-error *ngIf="score?.hasError('min') || score?.hasError('max')">
+                Score must be between 0 and 100
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-actions class="form-actions">
+        <button type="button" mat-button (click)="onCancel()" [disabled]="isSubmitting" class="cancel-btn">
+          <mat-icon>close</mat-icon>
+          <span>Cancel</span>
+        </button>
+        <button type="submit" mat-raised-button color="primary" class="submit-button" 
+                [disabled]="candidateForm.invalid || isSubmitting">
+          <div class="button-content">
+            <mat-icon *ngIf="!isSubmitting">{{ isEditMode ? 'update' : 'person_add' }}</mat-icon>
+            <mat-spinner *ngIf="isSubmitting" diameter="20" [strokeWidth]="3"></mat-spinner>
+            <span>{{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update' : 'Add') }} Candidate</span>
+          </div>
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

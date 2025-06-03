@@ -79,6 +79,30 @@
 /* Form group styles */
 .form-group {
   margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  color: #6c757d;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.input-with-icon .form-control {
+  padding-left: 42px;
+}
+
+.input-with-icon .form-control:focus {
+  border-color: #2a7b2f;
+  box-shadow: 0 0 0 0.2rem rgba(42, 123, 47, 0.25);
 }
 
 .form-group label {

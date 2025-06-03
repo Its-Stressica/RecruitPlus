@@ -1,1 +1,212 @@
-/* Candidate details component styles */
+.candidate-details-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.back-button-container {
+  margin-bottom: 20px;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.loading-spinner p {
+  margin-top: 16px;
+  color: #666;
+  font-size: 1.1em;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.error-message mat-icon {
+  color: #f44336;
+}
+
+.candidate-card {
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.candidate-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+}
+
+.candidate-avatar mat-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 16px 0;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.detail-item:hover {
+  background-color: #f0f0f0;
+}
+
+.detail-label {
+  font-size: 0.85em;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.detail-value {
+  font-size: 1em;
+  color: #333;
+  word-break: break-word;
+}
+
+.detail-value a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.detail-value a:hover {
+  text-decoration: underline;
+}
+
+.applications-list {
+  margin-top: 8px;
+}
+
+.application-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  margin: 6px 0;
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.application-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.application-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.application-title {
+  font-weight: 500;
+  color: #333;
+}
+
+.application-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  padding-left: 28px; /* Align with the icon above */
+}
+
+.application-status {
+  font-size: 0.85em;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.application-score {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+.application-score mat-icon {
+  color: #2e7d32;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+/* Status specific styles */
+:host-context(.status-pending) .application-status {
+  background-color: #fff3e0;
+  color: #ef6c00;
+}
+
+:host-context(.status-reviewed) .application-status {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+:host-context(.status-accepted) .application-status {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+:host-context(.status-rejected) .application-status {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+  border-top: 1px solid #eee;
+  margin-top: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .candidate-card {
+    margin: 10px;
+  }
+}

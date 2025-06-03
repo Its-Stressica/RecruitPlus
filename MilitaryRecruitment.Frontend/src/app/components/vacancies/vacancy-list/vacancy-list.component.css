@@ -34,30 +34,104 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .action-buttons button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  padding: 0 20px;
+  height: 44px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
 }
 
+.action-buttons button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Candidates Button */
 .candidates-button {
-  border: 1px solid var(--primary);
+  border: 2px solid var(--primary);
   color: var(--primary);
+  background-color: rgba(255, 255, 255, 0.9);
+  position: relative;
+  z-index: 1;
 }
 
-.candidates-button:hover {
-  background-color: rgba(63, 81, 181, 0.04);
+.candidates-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: rgba(63, 81, 181, 0.05);
+  transition: width 0.3s ease;
+  z-index: -1;
 }
 
+.candidates-button:hover::before {
+  width: 100%;
+}
+
+.candidates-button:active {
+  transform: translateY(1px);
+}
+
+/* Create Button */
 .create-button {
-  background-color: var(--primary);
+  background: #2e7d32;  /* Darker green for better contrast */
   color: white;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: none;
+  transition: all 0.3s ease;
 }
 
 .create-button:hover {
-  background-color: #303f9f;
+  background: #1b5e20;  /* Even darker green on hover */
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.create-button:active {
+  background: #0d3e10;  /* Darkest green for active state */
+  transform: translateY(1px);
+}
+
+.create-button:active {
+  transform: translateY(1px);
+}
+
+/* Focus styles for accessibility */
+.action-buttons button:focus-visible {
+  outline: 3px solid rgba(63, 81, 181, 0.5);
+  outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-buttons {
+    width: 100%;
+    margin-top: 1rem;
+  }
+  
+  .action-buttons button {
+    flex: 1;
+    padding: 0 12px;
+    font-size: 0.9rem;
+  }
 }
 
 /* Loading Spinner */

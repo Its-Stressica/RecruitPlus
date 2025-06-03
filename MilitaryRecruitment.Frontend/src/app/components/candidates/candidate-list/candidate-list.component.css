@@ -8,7 +8,19 @@
 /* Page Header */
 .candidate-list-container .page-header {
   margin-bottom: 2rem;
-  text-align: center;
+}
+
+.candidate-list-container .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.candidate-list-container .header-titles {
+  text-align: left;
 }
 
 .candidate-list-container .page-header .page-title {
@@ -21,6 +33,41 @@
 .candidate-list-container .page-header .page-subtitle {
   color: #5c6bc0;
   font-size: 1.1rem;
+}
+
+/* Back Button */
+.candidate-list-container .back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  height: 36px;
+  border-radius: 4px;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.candidate-list-container .back-button mat-icon {
+  margin-right: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .candidate-list-container .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  
+  .candidate-list-container .header-titles {
+    width: 100%;
+  }
+  
+  .candidate-list-container .back-button {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Loading and Status States */
@@ -133,45 +180,30 @@
   background-color: #f5f5f5;
 }
 
-/* Status Badges */
-.status-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
+/* Score Badges */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 12px;
   font-size: 0.8rem;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-
-.status-badge.status-new {
-  background-color: #e3f2fd;
-  color: #1565c0;
-}
-
-.status-badge.status-in-review {
-  background-color: #fff8e1;
-  color: #ff8f00;
-}
-
-.status-badge.status-interview {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-}
-
-.status-badge.status-hired {
-  background-color: #e8f5e9;
-  color: #1b5e20;
   font-weight: 600;
+  color: white;
 }
 
-.status-badge.status-rejected {
-  background-color: #ffebee;
-  color: #c62828;
+.score-high {
+  background-color: #2e7d32; /* Green */
 }
 
-.status-badge.status-default {
-  background-color: #f5f5f5;
-  color: #424242;
+.score-medium {
+  background-color: #ed6c02; /* Orange */
+}
+
+.score-low {
+  background-color: #d32f2f; /* Red */
 }
 
 /* Action Buttons */

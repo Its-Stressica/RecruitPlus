@@ -1,1 +1,77 @@
-<p>candidate-details works!</p>
+<div class="candidate-details-container">
+  <div class="back-button-container">
+    <button mat-button (click)="goBack()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Candidates
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading candidate details...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <mat-card *ngIf="candidate && !isLoading" class="candidate-card">
+    <mat-card-header>
+      <div mat-card-avatar class="candidate-avatar">
+        <mat-icon>person</mat-icon>
+      </div>
+      <mat-card-title>{{ candidate.firstName }} {{ candidate.lastName }}</mat-card-title>
+      <mat-card-subtitle>Candidate Details</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="details-grid">
+        <div class="detail-item">
+          <span class="detail-label">Full Name:</span>
+          <span class="detail-value">{{ candidate.firstName }} {{ candidate.lastName }}</span>
+        </div>
+        
+        <div class="detail-item" *ngIf="candidate.email">
+          <span class="detail-label">Email:</span>
+          <span class="detail-value">
+            <a [href]="'mailto:' + candidate.email">{{ candidate.email }}</a>
+          </span>
+        </div>
+
+        <div class="detail-item" *ngIf="candidate.phone">
+          <span class="detail-label">Phone:</span>
+          <span class="detail-value">
+            <a [href]="'tel:' + candidate.phone">{{ candidate.phone }}</a>
+          </span>
+        </div>
+
+        <div class="detail-item" *ngIf="candidate.applications?.length">
+          <span class="detail-label">Applications:</span>
+          <div class="applications-list">
+            <div *ngFor="let app of candidate.applications" class="application-item status-{{app.status}}" [class]="'status-' + app.status">
+              <div class="application-main">
+                <mat-icon>description</mat-icon>
+                <span class="application-title">{{ app.vacancy?.title || 'Unknown Position' }}</span>
+              </div>
+              <div class="application-details">
+                <span class="application-status">{{ app.status | titlecase }}</span>
+                <span class="application-score" *ngIf="app.score !== undefined">
+                  <mat-icon>score</mat-icon>
+                  {{ app.score }}/100
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Back to List
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

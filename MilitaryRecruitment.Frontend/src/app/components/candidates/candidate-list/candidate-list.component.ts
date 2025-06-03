@@ -1,31 +1,36 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MockDataService } from '../../../core/services/mock-data.service';
 import { Candidate } from '../../../models/candidate.model';
+import { CandidateFormComponent } from '../candidate-form/candidate-form.component';
 
 @Component({
   selector: 'app-candidate-list',
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   templateUrl: './candidate-list.component.html',
   styleUrl: './candidate-list.component.css'
 })
 export class CandidateListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'email', 'status', 'applicationDate', 'actions'];
+  displayedColumns: string[] = ['name', 'email', 'vacancy', 'score', 'applicationDate'];
   candidates: Candidate[] = [];
   isLoading = false;
   error: string | null = null;
@@ -35,7 +40,9 @@ export class CandidateListComponent implements OnInit {
 
   constructor(
     private mockDataService: MockDataService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -75,34 +82,48 @@ export class CandidateListComponent implements OnInit {
   }
 
   viewCandidate(id: string): void {
-    // Implement view functionality
-    console.log('View candidate:', id);
+    this.router.navigate(['/candidates', id]);
   }
 
-  editCandidate(id: string): void {
-    // Implement edit functionality
-    console.log('Edit candidate:', id);
+  getFirstApplication(candidate: Candidate): any {
+    return candidate.applications && candidate.applications.length > 0 
+      ? candidate.applications[0] 
+      : null;
   }
 
   addCandidate(): void {
-    // Implement add functionality
-    console.log('Add new candidate');
+    const dialogRef = this.dialog.open(CandidateFormComponent, {
+      width: '800px',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      panelClass: 'candidate-form-dialog',
+      position: {
+        top: '50px'
+      },
+      autoFocus: false,
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((result: Candidate | undefined) => {
+      if (result) {
+        // Add the new candidate to the beginning of the list
+        this.candidates = [result, ...this.candidates];
+        this.totalItems += 1;
+        this.showSuccess('Candidate added successfully!');
+      }
+    });
   }
 
-  getStatusClass(status: string): string {
-    switch (status?.toLowerCase()) {
-      case 'new':
-        return 'status-new';
-      case 'in review':
-        return 'status-in-review';
-      case 'interview':
-        return 'status-interview';
-      case 'hired':
-        return 'status-hired';
-      case 'rejected':
-        return 'status-rejected';
-      default:
-        return 'status-default';
-    }
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: ['success-snackbar']
+    });
+  }
+
+  getScoreClass(score: number): string {
+    if (score >= 80) return 'score-high';
+    if (score >= 50) return 'score-medium';
+    return 'score-low';
   }
 }
