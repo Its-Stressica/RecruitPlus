@@ -14,6 +14,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { VacancyService, VacancyGetDto } from '../../../core/services/vacancy.service';
+import { ApplicationService } from '../../../core/services/application.service';
 
 @Component({
   selector: 'app-vacancy-list',
@@ -42,6 +43,7 @@ export class VacancyListComponent implements OnInit {
   
   constructor(
     private vacancyService: VacancyService,
+    private applicationService: ApplicationService,
     private router: Router,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
@@ -136,5 +138,46 @@ export class VacancyListComponent implements OnInit {
         this.snackBar.open('Failed to delete vacancy', 'Dismiss', { duration: 3000 });
       }
     });
+  }
+
+  /**
+   * Runs the assignment Algorithm to assign candidates to vacancies
+   */
+  runAssignmentAlgorithm(): void {
+    if (confirm('Run the assignment Algorithm? This will assign candidates to vacancies based on their scores and preferences.')) {
+      this.isLoading = true;
+      this.applicationService.runAssignmentAlgorithm().subscribe({
+        next: (response: { message?: string }) => {
+          this.snackBar.open(response.message || 'Assignment Algorithm completed successfully', 'Close', { duration: 5000 });
+          this.loadVacancies();
+        },
+        error: (error: any) => {
+          console.error('Error running assignment Algorithm:', error);
+          const errorMessage = error.error?.message || 'Failed to run assignment Algorithm';
+          this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
+          this.isLoading = false;
+        }
+      });
+    }
+  }
+
+  /**
+   * Resets all application assignments after confirmation
+   */
+  resetAllAssignments(): void {
+    if (confirm('Are you sure you want to reset all assignments? This will unassign all candidates from all vacancies.')) {
+      this.isLoading = true;
+      this.applicationService.resetAssignments().subscribe({
+        next: () => {
+          this.snackBar.open('All assignments have been reset', 'Close', { duration: 3000 });
+          this.loadVacancies();
+        },
+        error: (error: any) => {
+          console.error('Error resetting assignments:', error);
+          this.snackBar.open('Failed to reset assignments', 'Close', { duration: 3000 });
+          this.isLoading = false;
+        }
+      });
+    }
   }
 }

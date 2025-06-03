@@ -8,6 +8,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationService } from '../../../core/services/application.service';
+import { VacancyService } from '../../../core/services/vacancy.service';
+import { CandidateService } from '../../../core/services/candidate.service';
 import { Application } from '../../../models/application.model';
 
 @Component({
@@ -30,17 +32,19 @@ export class ApplicationListComponent implements OnInit {
   isLoading = true;
   vacancyId: string = '';
   vacancyTitle: string = 'Vacancy';
+  vacancyQuota: number = 0;
+  private totalCandidates: number = 0;
   displayedColumns: string[] = ['candidate', 'score', 'status', 'appliedAt', 'actions'];
   applications: Application[] = [];
-  // Optionally store a fallback for candidate names if needed
-  // candidateNames: { [applicationId: string]: string } = {};
-
+  showSelectionStatus = false;
   errorMessage: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private applicationService: ApplicationService,
+    private vacancyService: VacancyService,
+    private candidateService: CandidateService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -60,20 +64,92 @@ export class ApplicationListComponent implements OnInit {
       return;
     }
 
-    // Get the applications for this vacancy
-    this.applicationService.getApplications({ vacancyId: this.vacancyId }).subscribe({
-      next: (applications) => {
-        this.applications = applications;
-        this.isLoading = false;
+    console.log('Loading applications for vacancy:', this.vacancyId);
+    
+    // First, get the vacancy details to get the quota
+    this.applicationService.getVacancyDetails(this.vacancyId).subscribe({
+      next: (vacancy: any) => {
+        this.vacancyTitle = vacancy.title;
+        this.vacancyQuota = vacancy.quota || 0;
+        
+        // Then get the applications for this vacancy
+        this.loadVacancyApplications();
       },
       error: (error) => {
-        console.error('Error loading applications:', error);
-        this.errorMessage = 'Failed to load applications. Please try again later.';
+        console.error('Error loading vacancy details:', error);
+        this.errorMessage = 'Failed to load vacancy details';
         this.snackBar.open(this.errorMessage, 'Close', { duration: 5000 });
         this.isLoading = false;
       }
     });
   }
+
+  private loadVacancyApplications(): void {
+    this.isLoading = true;
+    
+  // First, get all candidates to get the total count
+  this.candidateService.getCandidates().subscribe({
+    next: (response: any) => {
+      this.totalCandidates = response.total || 0;
+      
+      // Then get all vacancies to calculate total quota
+    this.vacancyService.getVacancies().subscribe({
+      next: (vacancies: any[]) => {
+        // Sum up all quotas from all vacancies
+        const totalQuota = vacancies.reduce((sum: number, vacancy: any) => sum + (vacancy.quota || 0), 0);
+        console.log('Total quota across all vacancies:', totalQuota);
+        
+        // Now get the applications for the current vacancy
+        this.applicationService.getApplications({ vacancyId: this.vacancyId }).subscribe({
+          next: (applications: any[]) => {
+            console.log('Received applications:', applications);
+            this.applications = applications;
+            
+            // Check selection status based on total quota and selected candidates
+            const selectedCount = this.applications.filter((app: any) => app.isChosenByAlgorithm).length;
+            
+            // Use the total quota across all vacancies as the maximum possible selections
+            const maxPossibleSelections = Math.min(this.totalCandidates, totalQuota);
+            
+            // Show selection status if we have candidates and a valid quota
+            this.showSelectionStatus = selectedCount == maxPossibleSelections;
+            
+            console.log('Raw applications from API:', JSON.stringify(applications, null, 2));
+
+            // And add this after setting this.applications
+            console.log('Processed applications:', this.applications.map(app => ({
+              id: app.id,
+              isChosenByAlgorithm: app.isChosenByAlgorithm,
+              wasFullyCheckedByAlgorithm: app.wasFullyCheckedByAlgorithm,
+              type: typeof app.isChosenByAlgorithm
+            })));
+            
+            this.isLoading = false;
+          },
+          error: (error: any) => {
+            console.error('Error loading applications:', error);
+            this.errorMessage = 'Failed to load applications';
+            this.snackBar.open(this.errorMessage, 'Close', { duration: 5000 });
+            this.isLoading = false;
+          }
+        });
+      },
+      error: (error: any) => {
+        console.error('Error loading vacancies:', error);
+        this.errorMessage = 'Failed to load vacancy information';
+        this.snackBar.open(this.errorMessage, 'Close', { duration: 5000 });
+        this.isLoading = false;
+      }
+    });
+  },
+  error: (error: any) => {
+    console.error('Error loading candidates:', error);
+    this.errorMessage = 'Failed to load candidate information';
+    this.snackBar.open(this.errorMessage, 'Close', { duration: 5000 });
+    this.isLoading = false;
+  }
+});
+}
 
   viewApplication(applicationId: string): void {
     console.log('View application:', applicationId);

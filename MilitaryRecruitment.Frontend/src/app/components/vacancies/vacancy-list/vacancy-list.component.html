@@ -11,6 +11,14 @@
           <mat-icon>people</mat-icon>
           See All Candidates
         </button>
+        <button mat-raised-button color="primary" (click)="runAssignmentAlgorithm()" [disabled]="isLoading" class="assign-candidates-btn">
+          <mat-icon>auto_awesome</mat-icon>
+          Assign Candidates
+        </button>
+        <button mat-stroked-button color="warn" (click)="resetAllAssignments()" [disabled]="isLoading" class="reset-assignments-btn">
+          <mat-icon>restart_alt</mat-icon>
+          Reset Assignments
+        </button>
         <button mat-raised-button color="primary" routerLink="/vacancies/new" class="create-button">
           <mat-icon>add</mat-icon>
           Create New Vacancy
@@ -62,7 +70,7 @@
             </div>
             <div class="quota-item">
               <span class="quota-label">Applications:</span>
-              <span class="quota-value">0</span>
+              <span class="quota-value">{{ vacancy.applicationCount || 0 }}</span>
             </div>
           </div>
           <div class="progress-text">
@@ -87,7 +95,7 @@
           View Details
         </button>
         <button mat-button [routerLink]="['/vacancies', vacancy.id, 'applications']">
-          View Applications (0)
+          View Applications ({{ vacancy.applicationCount }})
         </button>
         <button mat-button color="warn" (click)="confirmDeleteVacancy(vacancy)">
           Delete

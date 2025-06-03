@@ -101,7 +101,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Charlie" && c.LastName == "Brown").Id,
                     VacancyId = vacancies.First(v => v.Title == "Developer").Id,
                     Score = 93,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -111,7 +111,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Diana" && c.LastName == "Wilson").Id,
                     VacancyId = vacancies.First(v => v.Title == "Developer").Id,
                     Score = 94,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -121,7 +121,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Eve" && c.LastName == "Taylor").Id,
                     VacancyId = vacancies.First(v => v.Title == "Developer").Id,
                     Score = 95,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -131,7 +131,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Alice" && c.LastName == "Smith").Id,
                     VacancyId = vacancies.First(v => v.Title == "Tester").Id,
                     Score = 81,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -141,7 +141,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Bob" && c.LastName == "Johnson").Id,
                     VacancyId = vacancies.First(v => v.Title == "Tester").Id,
                     Score = 82,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -151,7 +151,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Charlie" && c.LastName == "Brown").Id,
                     VacancyId = vacancies.First(v => v.Title == "Tester").Id,
                     Score = 83,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -161,7 +161,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Diana" && c.LastName == "Wilson").Id,
                     VacancyId = vacancies.First(v => v.Title == "Tester").Id,
                     Score = 84,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -171,7 +171,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Eve" && c.LastName == "Taylor").Id,
                     VacancyId = vacancies.First(v => v.Title == "Tester").Id,
                     Score = 85,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -181,7 +181,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Alice" && c.LastName == "Smith").Id,
                     VacancyId = vacancies.First(v => v.Title == "Designer").Id,
                     Score = 71,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -191,7 +191,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Bob" && c.LastName == "Johnson").Id,
                     VacancyId = vacancies.First(v => v.Title == "Designer").Id,
                     Score = 72,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -201,7 +201,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Charlie" && c.LastName == "Brown").Id,
                     VacancyId = vacancies.First(v => v.Title == "Designer").Id,
                     Score = 73,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -211,7 +211,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Diana" && c.LastName == "Wilson").Id,
                     VacancyId = vacancies.First(v => v.Title == "Designer").Id,
                     Score = 74,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 },
@@ -221,7 +221,7 @@ public class UnitOfWork
                     CandidateId = candidates.First(c => c.FirstName == "Eve" && c.LastName == "Taylor").Id,
                     VacancyId = vacancies.First(v => v.Title == "Designer").Id,
                     Score = 75,
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 }
@@ -340,7 +340,7 @@ public class UnitOfWork
                     VacancyId = vacancy.Id,
                     Score = Math.Max(0,
                     Math.Min(new Faker().Random.GaussianDouble(0.5, 0.2), 1)),
-                    IsChosenByAlgorythm = false,
+                    IsChosenByAlgorithm = false,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 };

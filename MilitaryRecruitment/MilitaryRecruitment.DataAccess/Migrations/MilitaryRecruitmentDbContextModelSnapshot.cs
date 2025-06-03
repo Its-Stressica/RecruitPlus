@@ -34,7 +34,7 @@ namespace MilitaryRecruitment.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsChosenByAlgorythm")
+                    b.Property<bool>("IsChosenByAlgorithm")
                         .HasColumnType("bit");
 
                     b.Property<double>("Score")
@@ -46,7 +46,7 @@ namespace MilitaryRecruitment.DataAccess.Migrations
                     b.Property<Guid>("VacancyId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("WasFullyCheckedByAlgorythm")
+                    b.Property<bool>("WasFullyCheckedByAlgorithm")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");

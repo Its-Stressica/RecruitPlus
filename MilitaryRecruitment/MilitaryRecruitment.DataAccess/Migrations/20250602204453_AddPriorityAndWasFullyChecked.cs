@@ -18,7 +18,7 @@ namespace MilitaryRecruitment.DataAccess.Migrations
                 defaultValue: 0);
 
             migrationBuilder.AddColumn<bool>(
-                name: "WasFullyCheckedByAlgorythm",
+                name: "WasFullyCheckedByAlgorithm",
                 table: "Applications",
                 type: "bit",
                 nullable: false,
@@ -33,7 +33,7 @@ namespace MilitaryRecruitment.DataAccess.Migrations
                 table: "Vacancies");
 
             migrationBuilder.DropColumn(
-                name: "WasFullyCheckedByAlgorythm",
+                name: "WasFullyCheckedByAlgorithm",
                 table: "Applications");
         }
     }

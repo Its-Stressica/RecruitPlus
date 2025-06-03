@@ -12,8 +12,8 @@ using MilitaryRecruitment.DataAccess;
 namespace MilitaryRecruitment.DataAccess.Migrations
 {
     [DbContext(typeof(MilitaryRecruitmentDbContext))]
-    [Migration("20250512202734_InitialMigrationWithIdentity")]
-    partial class InitialMigrationWithIdentity
+    [Migration("20250603215443_RenameAlgorithmColumns")]
+    partial class RenameAlgorithmColumns
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,9 @@ namespace MilitaryRecruitment.DataAccess.Migrations
 
                     b.Property<Guid>("VacancyId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("WasFullyCheckedByAlgorithm")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -90,6 +93,9 @@ namespace MilitaryRecruitment.DataAccess.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quota")
                         .HasColumnType("int");

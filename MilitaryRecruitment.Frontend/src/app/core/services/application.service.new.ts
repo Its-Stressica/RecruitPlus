@@ -33,33 +33,47 @@ export class ApplicationService {
     return httpParams;
   }
 
-  private mapApplication(app: Application): Application {
-    return {
-      ...app,
-      wasFullyCheckedByAlgorithm: !!app.wasFullyCheckedByAlgorithm,
-      isChosenByAlgorithm: !!app.isChosenByAlgorithm,
-      appliedAt: app.appliedAt ? new Date(app.appliedAt) : undefined,
-      createdAt: new Date(app.createdAt),
-      updatedAt: new Date(app.updatedAt)
-    };
-  }
-
   getApplications(params?: ApplicationFilterParams): Observable<Application[]> {
-    const url = params?.['vacancyId'] 
-      ? `${this.apiUrl}/applications/vacancy/${params['vacancyId']}`
-      : `${this.apiUrl}/applications`;
+    // If we have a vacancyId, use the specific endpoint for better performance
+    if (params && 'vacancyId' in params && params['vacancyId']) {
+      return this.http.get<Application[]>(`${this.apiUrl}/applications/vacancy/${params['vacancyId']}`).pipe(
+        map((applications: Application[]) => applications.map((app: Application) => ({
+          ...app,
+          wasFullyCheckedByAlgorithm: !!app.wasFullyCheckedByAlgorithm,
+          isChosenByAlgorithm: !!app.isChosenByAlgorithm,
+          appliedAt: app.appliedAt ? new Date(app.appliedAt) : undefined,
+          createdAt: new Date(app.createdAt),
+          updatedAt: new Date(app.updatedAt)
+        })))
+      );
+    }
     
-    const options = params?.['vacancyId'] 
-      ? {}
-      : { params: params ? this.buildParams(params) : new HttpParams() };
-    
-    return this.http.get<Application[]>(url, options).pipe(
-      map(applications => applications.map(app => this.mapApplication(app)))
+    // Otherwise, fall back to the general endpoint with filters
+    return this.http.get<Application[]>(`${this.apiUrl}/applications`, { 
+      params: params ? this.buildParams(params) : undefined 
+    }).pipe(
+      map((applications: Application[]) => applications.map((app: Application) => ({
+        ...app,
+        wasFullyCheckedByAlgorithm: !!app.wasFullyCheckedByAlgorithm,
+        isChosenByAlgorithm: !!app.isChosenByAlgorithm,
+        appliedAt: app.appliedAt ? new Date(app.appliedAt) : undefined,
+        createdAt: new Date(app.createdAt),
+        updatedAt: new Date(app.updatedAt)
+      })))
     );
   }
 
   getApplicationById(id: string): Observable<Application> {
-    return this.http.get<Application>(`${this.apiUrl}/applications/${id}`);
+    return this.http.get<Application>(`${this.apiUrl}/applications/${id}`).pipe(
+      map((app: Application) => ({
+        ...app,
+        wasFullyCheckedByAlgorithm: !!app.wasFullyCheckedByAlgorithm,
+        isChosenByAlgorithm: !!app.isChosenByAlgorithm,
+        appliedAt: app.appliedAt ? new Date(app.appliedAt) : undefined,
+        createdAt: new Date(app.createdAt),
+        updatedAt: new Date(app.updatedAt)
+      }))
+    );
   }
 
   createApplication(application: CreateApplicationDto): Observable<Application> {
@@ -84,19 +98,10 @@ export class ApplicationService {
   }
 
   /**
-   * Runs the assignment Algorithm to assign candidates to vacancies
-   * @returns Observable that completes when the Algorithm has finished
+   * Runs the assignment algorithm to assign candidates to vacancies
+   * @returns Observable with the result message
    */
   runAssignmentAlgorithm(): Observable<{message: string}> {
-    return this.http.post<{message: string}>(`${this.apiUrl}/applications/run-Algorithm`, {});
-  }
-
-  /**
-   * Get vacancy details including quota
-   * @param id Vacancy ID
-   * @returns Vacancy details with quota
-   */
-  getVacancyDetails(id: string): Observable<{id: string, title: string, quota: number}> {
-    return this.http.get<{id: string, title: string, quota: number}>(`${this.apiUrl}/vacancies/${id}`);
+    return this.http.post<{message: string}>(`${this.apiUrl}/applications/run-algorithm`, {});
   }
 }

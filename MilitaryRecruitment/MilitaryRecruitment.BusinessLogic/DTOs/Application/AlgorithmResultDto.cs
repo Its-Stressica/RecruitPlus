@@ -6,5 +6,5 @@ public class AlgorithmResultDto
     public string CandidateName { get; set; }
     public string VacancyTitle { get; set; }
     public double Score { get; set; }
-    public bool IsChosenByAlgorythm { get; set; }
+    public bool IsChosenByAlgorithm { get; set; }
 }

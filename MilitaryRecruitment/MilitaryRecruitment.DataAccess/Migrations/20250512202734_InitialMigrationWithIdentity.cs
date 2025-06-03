@@ -48,7 +48,7 @@ namespace MilitaryRecruitment.DataAccess.Migrations
                     CandidateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     VacancyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Score = table.Column<double>(type: "float", nullable: false),
-                    IsChosenByAlgorythm = table.Column<bool>(type: "bit", nullable: false),
+                    IsChosenByAlgorithm = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

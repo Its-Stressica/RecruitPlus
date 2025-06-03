@@ -9,6 +9,9 @@ export interface VacancyGetDto {
   title: string;
   description: string;
   quota: number;
+  applicationCount: number;
+  chosenApplicationsCount: number;
+  hasBeenChecked: boolean;
   createdAt: string;
   updatedAt: string;
 }

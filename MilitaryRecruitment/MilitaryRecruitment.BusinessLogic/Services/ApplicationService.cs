@@ -35,8 +35,8 @@ public class ApplicationService
         var applications = _applicationRepository.GetAll().ToList();
         foreach (var app in applications)
         {
-            app.IsChosenByAlgorythm = false;
-            app.WasFullyCheckedByAlgorythm = false;
+            app.IsChosenByAlgorithm = false;
+            app.WasFullyCheckedByAlgorithm = false;
             _applicationRepository.Update(app);
         }
         _unitOfWork.SaveChanges();
@@ -56,7 +56,7 @@ public class ApplicationService
                 CandidateLastName = candidate?.LastName ?? string.Empty,
                 VacancyId = a.VacancyId,
                 Score = a.Score,
-                IsChosenByAlgorythm = a.IsChosenByAlgorythm,
+                IsChosenByAlgorithm = a.IsChosenByAlgorithm,
                 CreatedAt = a.CreatedAt,
                 UpdatedAt = a.UpdatedAt
             };
@@ -79,7 +79,7 @@ public class ApplicationService
             CandidateLastName = candidate?.LastName ?? string.Empty,
             VacancyId = application.VacancyId,
             Score = application.Score,
-            IsChosenByAlgorythm = application.IsChosenByAlgorythm,
+            IsChosenByAlgorithm = application.IsChosenByAlgorithm,
             CreatedAt = application.CreatedAt,
             UpdatedAt = application.UpdatedAt,
         };
@@ -92,7 +92,7 @@ public class ApplicationService
             CandidateId = applicationDto.CandidateId,
             VacancyId = applicationDto.VacancyId,
             Score = applicationDto.Score,
-            IsChosenByAlgorythm = applicationDto.IsChosenByAlgorythm,
+            IsChosenByAlgorithm = applicationDto.IsChosenByAlgorithm,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -113,7 +113,7 @@ public class ApplicationService
             CandidateLastName = candidate?.LastName ?? string.Empty,
             VacancyId = createdApplication.VacancyId,
             Score = createdApplication.Score,
-            IsChosenByAlgorythm = createdApplication.IsChosenByAlgorythm,
+            IsChosenByAlgorithm = createdApplication.IsChosenByAlgorithm,
             CreatedAt = createdApplication.CreatedAt,
             UpdatedAt = createdApplication.UpdatedAt,
         };
@@ -166,7 +166,7 @@ public class ApplicationService
             }
 
             assignments[bestApp.VacancyId].Add(bestApp);
-            bestApp.IsChosenByAlgorythm = true;
+            bestApp.IsChosenByAlgorithm = true;
             _applicationRepository.Update(bestApp);
             _unitOfWork.SaveChanges();
         }
@@ -198,7 +198,7 @@ public class ApplicationService
         var candidateApps = applications
             .Where(a => a.CandidateId == candidateApp.CandidateId && 
                          a.VacancyId != currentVacancyId && 
-                         a.WasFullyCheckedByAlgorythm == false)
+                         a.WasFullyCheckedByAlgorithm == false)
             .ToList();
 
         if (!candidateApps.Any())
@@ -237,7 +237,7 @@ public class ApplicationService
                 .First();
 
             assignments[vacancyToFix.Id].Remove(worstApp);
-            worstApp.IsChosenByAlgorythm = false;
+            worstApp.IsChosenByAlgorithm = false;
             _applicationRepository.Update(worstApp);
             _unitOfWork.SaveChanges();
             return false;
@@ -249,8 +249,8 @@ public class ApplicationService
 
         // Remove candidate from original vacancy
         assignments[vacancyToFix.Id].Remove(appToReplace);
-        appToReplace.IsChosenByAlgorythm = false;
-        appToReplace.WasFullyCheckedByAlgorythm = true;
+        appToReplace.IsChosenByAlgorithm = false;
+        appToReplace.WasFullyCheckedByAlgorithm = true;
         _applicationRepository.Update(appToReplace);
         _unitOfWork.SaveChanges();
 
@@ -262,7 +262,7 @@ public class ApplicationService
                            a.VacancyId == replacementVac);
 
             assignments[replacementVac].Add(newAssignmentApp);
-            newAssignmentApp.IsChosenByAlgorythm = true;
+            newAssignmentApp.IsChosenByAlgorithm = true;
             _applicationRepository.Update(newAssignmentApp);
             _unitOfWork.SaveChanges();
         }
@@ -308,7 +308,7 @@ public class ApplicationService
                     CandidateName = $"{candidate.FirstName} {candidate.LastName}",
                     VacancyTitle = vacancy.Title,
                     Score = application.Score,
-                    IsChosenByAlgorythm = application.IsChosenByAlgorythm
+                    IsChosenByAlgorithm = application.IsChosenByAlgorithm
                 });
             }
         }
@@ -328,7 +328,7 @@ public class ApplicationService
             CandidateLastName = candidate?.LastName ?? string.Empty,
             VacancyId = a.VacancyId,
             Score = a.Score,
-            IsChosenByAlgorythm = a.IsChosenByAlgorythm,
+            IsChosenByAlgorithm = a.IsChosenByAlgorithm,
             CreatedAt = a.CreatedAt,
             UpdatedAt = a.UpdatedAt
         });
@@ -348,7 +348,7 @@ public class ApplicationService
                 CandidateLastName = candidate?.LastName ?? string.Empty,
                 VacancyId = a.VacancyId,
                 Score = a.Score,
-                IsChosenByAlgorythm = a.IsChosenByAlgorythm,
+                IsChosenByAlgorithm = a.IsChosenByAlgorithm,
                 CreatedAt = a.CreatedAt,
                 UpdatedAt = a.UpdatedAt
             };
@@ -367,7 +367,7 @@ public class ApplicationService
             CandidateLastName = candidate?.LastName ?? string.Empty,
             VacancyId = a.VacancyId,
             Score = a.Score,
-            IsChosenByAlgorythm = a.IsChosenByAlgorythm,
+            IsChosenByAlgorithm = a.IsChosenByAlgorithm,
             CreatedAt = a.CreatedAt,
             UpdatedAt = a.UpdatedAt
         });

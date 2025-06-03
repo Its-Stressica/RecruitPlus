@@ -272,6 +272,73 @@
   color: #2e7d32;
 }
 
+/* Unchecked vacancy card */
+.vacancy-card.not-checked {
+  opacity: 0.8;
+  background-color: #fafafa;
+  border-left: 4px solid #ff9800;
+}
+
+.vacancy-card.not-checked:hover {
+  opacity: 0.9;
+  background-color: #f5f5f5;
+}
+
+/* Not checked badge */
+.not-checked-badge {
+  display: inline-block;
+  background-color: #fff3e0;
+  color: #e65100;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+/* Chosen count indicator */
+.chosen-count {
+  font-size: 0.8rem;
+  color: #2e7d32;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+/* Ensure text is readable in unchecked state */
+.vacancy-card.not-checked .vacancy-header-content,
+.vacancy-card.not-checked .mat-card-title,
+.vacancy-card.not-checked .mat-card-subtitle,
+.vacancy-card.not-checked .quota-label,
+.vacancy-card.not-checked .quota-value,
+.vacancy-card.not-checked .meta-item {
+  color: #616161;
+}
+
+/* Animations */
+@keyframes pulse-blue {
+  0% {
+    box-shadow: 0 0 0 0 rgba(25, 118, 210, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(25, 118, 210, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(25, 118, 210, 0);
+  }
+}
+
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(211, 47, 47, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(211, 47, 47, 0);
+  }
+}
+
 .status-badge.inactive {
   background-color: #ffebee;
   color: #c62828;

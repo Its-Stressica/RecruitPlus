@@ -43,9 +43,9 @@ public class ApplicationRepository
     {
         return _context.Applications.Where(a => a.CandidateId == candidateId && a.VacancyId == vacancyId).ToList();
     }
-    public IEnumerable<Application> GetByCandidateIdAndVacancyIdAndIsChosenByAlgorythm(Guid candidateId, Guid vacancyId, bool isChosenByAlgorythm)
+    public IEnumerable<Application> GetByCandidateIdAndVacancyIdAndIsChosenByAlgorithm(Guid candidateId, Guid vacancyId, bool isChosenByAlgorithm)
     {
-        return _context.Applications.Where(a => a.CandidateId == candidateId && a.VacancyId == vacancyId && a.IsChosenByAlgorythm == isChosenByAlgorythm).ToList();
+        return _context.Applications.Where(a => a.CandidateId == candidateId && a.VacancyId == vacancyId && a.IsChosenByAlgorithm == isChosenByAlgorithm).ToList();
     }
 
 }

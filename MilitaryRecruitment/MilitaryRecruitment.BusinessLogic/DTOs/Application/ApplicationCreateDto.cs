@@ -8,5 +8,5 @@ public class ApplicationCreateDto
     public Guid CandidateId { get; set; }
     public Guid VacancyId { get; set; }
     public double Score { get; set; }
-    public bool IsChosenByAlgorythm { get; set; }
+    public bool IsChosenByAlgorithm { get; set; }
 }

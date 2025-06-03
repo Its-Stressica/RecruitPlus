@@ -57,9 +57,26 @@
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef>Status</th>
           <td mat-cell *matCellDef="let application">
-            <span class="status-badge" [ngClass]="getStatusBadgeClass(application.status)">
-              {{ application.status | titlecase }}
-            </span>
+            <div class="status-container">
+              <!-- <span class="status-badge" [ngClass]="getStatusBadgeClass(application.status)">
+                {{ application.status | titlecase }}
+              </span> -->
+              <!-- TODO: show only when assignment is done -->
+              <!-- Show selection status if enabled -->
+              <!--ng-container *ngIf="showSelectionStatus"-->
+                <div class="selection-status" [class.selected]="application.isChosenByAlgorithm">
+                  <span class="status-icon">{{ application.isChosenByAlgorithm ? '✓' : '✗' }}</span>
+                  <span class="status-text">
+                    {{ application.isChosenByAlgorithm ? 'Selected' : 'Not Selected' }}
+                  </span>
+                </div>
+              <!--/ng-container-->
+              <!-- Debug info (temporary) -->
+              <div class="debug-info" *ngIf="false">
+                <div>Chosen: {{ application.isChosenByAlgorithm }}</div>
+                <div>Checked: {{ application.wasFullyCheckedByAlgorithm }}</div>
+              </div>
+            </div>
           </td>
         </ng-container>
 
@@ -82,7 +99,10 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row 
+            *matRowDef="let row; columns: displayedColumns;"
+            [class.not-chosen]="showSelectionStatus && !row.isChosenByAlgorithm">
+        </tr>
       </table>
     </div>
   </div>

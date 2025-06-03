@@ -11,7 +11,7 @@ public class ApplicationGetDto
     public string CandidateLastName { get; set; } = string.Empty;
     public Guid VacancyId { get; set; }
     public double Score { get; set; }
-    public bool IsChosenByAlgorythm { get; set; }
+    public bool IsChosenByAlgorithm { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
