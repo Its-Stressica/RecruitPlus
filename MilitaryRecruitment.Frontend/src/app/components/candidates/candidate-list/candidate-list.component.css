@@ -25,30 +25,79 @@
 
 .candidate-list-container .page-header .page-title {
   font-size: 2rem;
-  font-weight: 600;
-  color: #1a237e;
+  font-weight: 700;
+  color: #2C2B26; /* Dark gray/black for main title */
   margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
 }
 
 .candidate-list-container .page-header .page-subtitle {
-  color: #5c6bc0;
+  color: #6B4B1A; /* Dark brown for subtitle */
   font-size: 1.1rem;
+  font-weight: 400;
+  opacity: 0.9;
 }
 
 /* Back Button */
 .candidate-list-container .back-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 0 16px;
-  height: 36px;
-  border-radius: 4px;
+  height: 42px;
+  min-width: 150px;
+  border-radius: 8px;
   font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  background-color: #ffffff;
+  color: #2C2B26;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.candidate-list-container .back-button:hover {
+  background-color: #FD8905;
+  color: white;
+  border-color: #FD8905;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.candidate-list-container .back-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.candidate-list-container .back-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.candidate-list-container .back-button:hover::before {
+  left: 100%;
+}
+
+.candidate-list-container .back-button:focus-visible {
+  outline: 3px solid rgba(63, 81, 181, 0.5);
+  outline-offset: 2px;
 }
 
 .candidate-list-container .back-button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
   margin-right: 4px;
 }
 
@@ -121,33 +170,67 @@
 
 /* Action Buttons */
 .candidate-actions {
+  margin-bottom: 2rem;
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 1.5rem;
 }
 
-.create-button {
-  display: flex;
+.candidate-actions .create-button {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  background-color: var(--primary);
-  color: white;
+  padding: 0 16px;
+  height: 42px;
+  min-width: 150px;
+  border-radius: 8px;
   font-weight: 500;
+  font-size: 0.9rem;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  padding: 0 16px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
+  background-color: #ffffff;
+  color: #2C2B26;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
-.create-button:hover {
-  background-color: #303f9f;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.candidate-actions .create-button:hover {
+  background-color: #FD8905;
+  color: white;
+  border-color: #FD8905;
   transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.create-button mat-icon {
+.candidate-actions .create-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.candidate-actions .create-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.candidate-actions .create-button:hover::before {
+  left: 100%;
+}
+
+.candidate-actions .create-button:focus-visible {
+  outline: 3px solid rgba(63, 81, 181, 0.5);
+  outline-offset: 2px;
+}
+
+.candidate-actions .create-button mat-icon {
   font-size: 20px;
   width: 20px;
   height: 20px;
