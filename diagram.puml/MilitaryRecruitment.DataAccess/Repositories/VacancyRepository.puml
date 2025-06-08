@@ -1,0 +1,10 @@
+@startuml
+class VacancyRepository {
+    + VacancyRepository(context:MilitaryRecruitmentDbContext)
+    + Add(vacancy:Vacancy) : void
+    + Update(vacancy:Vacancy) : void
+    + Delete(vacancy:Vacancy) : void
+    + GetById(id:Guid) : Vacancy
+    + GetAll() : IEnumerable<Vacancy>
+}
+@enduml

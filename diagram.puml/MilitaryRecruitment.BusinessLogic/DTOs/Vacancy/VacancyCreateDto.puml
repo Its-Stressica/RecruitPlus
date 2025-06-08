@@ -1,0 +1,7 @@
+@startuml
+class VacancyCreateDto {
+    + Title : string <<get>> <<set>>
+    + Description : string <<get>> <<set>>
+    + Quota : int <<get>> <<set>>
+}
+@enduml

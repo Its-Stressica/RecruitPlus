@@ -1,0 +1,38 @@
+@startuml
+' Enable better layout
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 50
+skinparam classAttributeIconSize 0
+
+' Include DbContext
+!include .\MilitaryRecruitment.DataAccess\MilitaryRecruitmentDbContext.puml
+
+' Include Repositories
+!include .\MilitaryRecruitment.DataAccess\Repositories\ApplicationRepository.puml
+!include .\MilitaryRecruitment.DataAccess\Repositories\CandidateRepository.puml
+!include .\MilitaryRecruitment.DataAccess\Repositories\VacancyRepository.puml
+
+' Include Services
+!include .\MilitaryRecruitment.BusinessLogic\Services\ApplicationService.puml
+!include .\MilitaryRecruitment.BusinessLogic\Services\CandidateService.puml
+!include .\MilitaryRecruitment.BusinessLogic\Services\VacancyService.puml
+
+' Include Controllers
+!include .\MilitaryRecruitment.Api\Controllers\ApplicationsController.puml
+!include .\MilitaryRecruitment.Api\Controllers\CandidatesController.puml
+!include .\MilitaryRecruitment.Api\Controllers\VacanciesController.puml
+
+' Add relationships
+ApplicationsController --> ApplicationService
+CandidatesController --> CandidateService
+VacanciesController --> VacancyService
+
+ApplicationService --> ApplicationRepository
+CandidateService --> CandidateRepository
+VacancyService --> VacancyRepository
+
+ApplicationRepository --> MilitaryRecruitmentDbContext
+CandidateRepository --> MilitaryRecruitmentDbContext
+VacancyRepository --> MilitaryRecruitmentDbContext
+@enduml

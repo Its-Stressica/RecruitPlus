@@ -1,0 +1,8 @@
+@startuml
+class ApplicationCreateDto {
+    + CandidateId : Guid <<get>> <<set>>
+    + VacancyId : Guid <<get>> <<set>>
+    + Score : double <<get>> <<set>>
+    + IsChosenByAlgorithm : bool <<get>> <<set>>
+}
+@enduml

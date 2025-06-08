@@ -1,0 +1,5 @@
+@startuml
+class MilitaryRecruitmentDbContextModelSnapshot <<partial>> {
+}
+ModelSnapshot <|-- MilitaryRecruitmentDbContextModelSnapshot
+@enduml

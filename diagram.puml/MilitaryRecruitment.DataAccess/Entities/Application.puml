@@ -1,0 +1,14 @@
+@startuml
+class Application {
+    + Id : Guid <<get>> <<set>>
+    + CandidateId : Guid <<get>> <<set>>
+    + VacancyId : Guid <<get>> <<set>>
+    + Score : double <<get>> <<set>>
+    + IsChosenByAlgorithm : bool <<get>> <<set>> = false
+    + WasFullyCheckedByAlgorithm : bool <<get>> <<set>> = false
+    + CreatedAt : DateTime <<get>> <<set>>
+    + UpdatedAt : DateTime <<get>> <<set>>
+    + <<virtual>> Candidate : Candidate <<get>> <<set>>
+    + <<virtual>> Vacancy : Vacancy <<get>> <<set>>
+}
+@enduml

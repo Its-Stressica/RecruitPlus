@@ -1,0 +1,14 @@
+@startuml
+class ApplicationService {
+    + ApplicationService(unitOfWork:UnitOfWork, applicationRepository:ApplicationRepository, candidateRepository:CandidateRepository, vacancyRepository:VacancyRepository, logger:ILogger<ApplicationService>)
+    + ResetAllAssignments() : void
+    + GetAllApplications() : IEnumerable<ApplicationGetDto>
+    + GetApplicationById(id:Guid) : ApplicationGetDto
+    + CreateApplication(applicationDto:ApplicationCreateDto) : ApplicationGetDto
+    + DeleteApplication(id:Guid) : void
+    + RunMakAlgorithm() : IEnumerable<AlgorithmResultDto>
+    + GetApplicationsByCandidateId(candidateId:Guid) : IEnumerable<ApplicationGetDto>
+    + GetApplicationsByVacancyId(vacancyId:Guid) : IEnumerable<ApplicationGetDto>
+    + GetApplicationByCandidateIdAndVacancyId(candidateId:Guid, vacancyId:Guid) : IEnumerable<ApplicationGetDto>
+}
+@enduml

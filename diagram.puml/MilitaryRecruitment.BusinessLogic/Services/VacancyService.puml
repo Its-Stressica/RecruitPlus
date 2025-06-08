@@ -1,0 +1,9 @@
+@startuml
+class VacancyService {
+    + VacancyService(unitOfWork:UnitOfWork, vacancyRepository:VacancyRepository)
+    + GetAllVacancies() : IEnumerable<VacancyGetDto>
+    + GetVacancyById(id:Guid) : VacancyGetDto
+    + CreateVacancy(vacancyDto:VacancyCreateDto) : void
+    + DeleteVacancy(id:Guid) : void
+}
+@enduml

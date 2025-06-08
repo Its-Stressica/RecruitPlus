@@ -1,0 +1,38 @@
+@startuml
+' Enable better layout
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 50
+skinparam classAttributeIconSize 0
+hide empty members
+hide circle
+left to right direction
+
+' Define layers
+rectangle "API Layer" {
+  class ApplicationsController
+  class CandidatesController
+  class VacanciesController
+}
+
+rectangle "Business Logic" {
+  class ApplicationService
+  class CandidateService
+  class VacancyService
+}
+
+rectangle "Data Access" {
+  class ApplicationRepository
+  class CandidateRepository
+  class VacancyRepository
+}
+
+' Add relationships
+ApplicationsController --> ApplicationService
+CandidatesController --> CandidateService
+VacanciesController --> VacancyService
+
+ApplicationService --> ApplicationRepository
+CandidateService --> CandidateRepository
+VacancyService --> VacancyRepository
+@enduml

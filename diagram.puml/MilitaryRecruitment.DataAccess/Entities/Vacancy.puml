@@ -1,0 +1,11 @@
+@startuml
+class Vacancy {
+    + Id : Guid <<get>> <<set>>
+    + Title : string <<get>> <<set>>
+    + Description : string <<get>> <<set>>
+    + Quota : int <<get>> <<set>>
+    + Priority : int <<get>> <<set>>
+    + CreatedAt : DateTime <<get>> <<set>>
+    + UpdatedAt : DateTime <<get>> <<set>>
+}
+@enduml

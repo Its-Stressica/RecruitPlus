@@ -1,0 +1,9 @@
+@startuml
+class AlgorithmResultDto {
+    + Id : Guid <<get>> <<set>>
+    + CandidateName : string <<get>> <<set>>
+    + VacancyTitle : string <<get>> <<set>>
+    + Score : double <<get>> <<set>>
+    + IsChosenByAlgorithm : bool <<get>> <<set>>
+}
+@enduml

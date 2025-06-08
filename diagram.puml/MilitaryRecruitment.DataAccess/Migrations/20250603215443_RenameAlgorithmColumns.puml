@@ -1,0 +1,5 @@
+@startuml
+class RenameAlgorithmColumns <<partial>> {
+}
+Migration <|-- RenameAlgorithmColumns
+@enduml

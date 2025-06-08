@@ -1,0 +1,14 @@
+@startuml
+class ApplicationRepository {
+    + ApplicationRepository(context:MilitaryRecruitmentDbContext)
+    + Add(application:Application) : void
+    + Update(application:Application) : void
+    + Delete(application:Application) : void
+    + GetById(id:Guid) : Application
+    + GetAll() : IEnumerable<Application>
+    + GetByCandidateId(candidateId:Guid) : IEnumerable<Application>
+    + GetByVacancyId(vacancyId:Guid) : IEnumerable<Application>
+    + GetByCandidateIdAndVacancyId(candidateId:Guid, vacancyId:Guid) : IEnumerable<Application>
+    + GetByCandidateIdAndVacancyIdAndIsChosenByAlgorithm(candidateId:Guid, vacancyId:Guid, isChosenByAlgorithm:bool) : IEnumerable<Application>
+}
+@enduml

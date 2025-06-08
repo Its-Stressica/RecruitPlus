@@ -1,0 +1,13 @@
+@startuml
+class ApplicationGetDto {
+    + Id : Guid <<get>> <<set>>
+    + CandidateId : Guid <<get>> <<set>>
+    + CandidateFirstName : string <<get>> <<set>>
+    + CandidateLastName : string <<get>> <<set>>
+    + VacancyId : Guid <<get>> <<set>>
+    + Score : double <<get>> <<set>>
+    + IsChosenByAlgorithm : bool <<get>> <<set>>
+    + CreatedAt : DateTime <<get>> <<set>>
+    + UpdatedAt : DateTime <<get>> <<set>>
+}
+@enduml

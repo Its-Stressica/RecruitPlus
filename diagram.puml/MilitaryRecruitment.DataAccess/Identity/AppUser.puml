@@ -1,0 +1,6 @@
+@startuml
+class AppUser {
+    + Name : string <<get>> <<set>>
+}
+IdentityUser <|-- AppUser
+@enduml

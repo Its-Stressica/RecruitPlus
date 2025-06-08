@@ -1,0 +1,11 @@
+@startuml
+class UnitOfWork {
+    + UnitOfWork(context:MilitaryRecruitmentDbContext)
+    + Candidates : CandidateRepository <<get>>
+    + Vacancies : VacancyRepository <<get>>
+    + Applications : ApplicationRepository <<get>>
+    + SaveChanges() : void
+    + GenerateData(predefined:bool) : void
+    + ClearData() : void
+}
+@enduml

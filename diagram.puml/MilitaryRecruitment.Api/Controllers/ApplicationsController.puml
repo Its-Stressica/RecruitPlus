@@ -1,0 +1,15 @@
+@startuml
+class ApplicationsController {
+    + ApplicationsController(applicationService:ApplicationService)
+    + GetAllApplications() : IActionResult
+    + GetApplicationById(id:Guid) : IActionResult
+    + CreateApplication(applicationDto:ApplicationCreateDto) : IActionResult
+    + DeleteApplication(id:Guid) : IActionResult
+    + GetApplicationsByCandidateId(candidateId:Guid) : IActionResult
+    + GetApplicationsByVacancyId(vacancyId:Guid) : IActionResult
+    + GetApplicationByCandidateIdAndVacancyId(candidateId:Guid, vacancyId:Guid) : IActionResult
+    + RunAssignmentAlgorithm() : IActionResult
+    + ResetAssignments() : IActionResult
+}
+ControllerBase <|-- ApplicationsController
+@enduml

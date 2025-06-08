@@ -1,0 +1,6 @@
+@startuml
+class CandidateCreateDto {
+    + FirstName : string <<get>> <<set>>
+    + LastName : string <<get>> <<set>>
+}
+@enduml

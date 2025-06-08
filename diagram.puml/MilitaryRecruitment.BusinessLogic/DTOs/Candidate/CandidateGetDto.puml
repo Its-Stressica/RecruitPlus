@@ -1,0 +1,7 @@
+@startuml
+class CandidateGetDto {
+    + Id : Guid <<get>> <<set>>
+    + FirstName : string <<get>> <<set>>
+    + LastName : string <<get>> <<set>>
+}
+@enduml

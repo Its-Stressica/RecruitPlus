@@ -1,0 +1,5 @@
+@startuml
+class AddPriorityAndWasFullyChecked <<partial>> {
+}
+Migration <|-- AddPriorityAndWasFullyChecked
+@enduml

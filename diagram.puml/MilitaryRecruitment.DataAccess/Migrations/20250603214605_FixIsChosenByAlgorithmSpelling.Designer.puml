@@ -1,0 +1,4 @@
+@startuml
+class FixIsChosenByAlgorithmSpelling <<partial>> {
+}
+@enduml

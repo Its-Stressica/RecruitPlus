@@ -1,0 +1,10 @@
+@startuml
+class VacanciesController {
+    + VacanciesController(vacancyService:VacancyService)
+    + GetAllVacancies() : IActionResult
+    + GetVacancyById(id:Guid) : IActionResult
+    + CreateVacancy(vacancyDto:VacancyCreateDto) : IActionResult
+    + DeleteVacancy(id:Guid) : IActionResult
+}
+ControllerBase <|-- VacanciesController
+@enduml
