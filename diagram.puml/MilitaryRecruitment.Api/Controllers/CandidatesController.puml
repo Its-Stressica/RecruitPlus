@@ -1,10 +1,10 @@
 @startuml
 class CandidatesController {
-    + CandidatesController(candidateService:CandidateService)
-    + GetAllCandidates() : IActionResult
-    + GetCandidateById(id:Guid) : IActionResult
-    + CreateCandidate(candidateDto:CandidateCreateDto) : IActionResult
-    + DeleteCandidate(id:Guid) : IActionResult
+    ' + CandidatesController(candidateService:CandidateService)
+    ' + GetAllCandidates() : IActionResult
+    ' + GetCandidateById(id:Guid) : IActionResult
+    ' + CreateCandidate(candidateDto:CandidateCreateDto) : IActionResult
+    ' + DeleteCandidate(id:Guid) : IActionResult
 }
 ControllerBase <|-- CandidatesController
 @enduml

@@ -1,9 +1,9 @@
 @startuml
 class CandidateService {
-    + CandidateService(unitOfWork:UnitOfWork, candidateRepository:CandidateRepository)
-    + GetAllCandidates() : IEnumerable<CandidateGetDto>
-    + GetCandidateById(id:Guid) : CandidateGetDto
-    + CreateCandidate(candidateDto:CandidateCreateDto) : void
-    + DeleteCandidate(id:Guid) : void
+    ' + CandidateService(unitOfWork:UnitOfWork, candidateRepository:CandidateRepository)
+    ' + GetAllCandidates() : IEnumerable<CandidateGetDto>
+    ' + GetCandidateById(id:Guid) : CandidateGetDto
+    ' + CreateCandidate(candidateDto:CandidateCreateDto) : void
+    ' + DeleteCandidate(id:Guid) : void
 }
 @enduml

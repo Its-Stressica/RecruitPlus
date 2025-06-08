@@ -8,24 +8,17 @@ hide empty members
 hide circle
 left to right direction
 
-' Define layers
-rectangle "API Layer" {
-  class ApplicationsController
-  class CandidatesController
-  class VacanciesController
-}
-
-rectangle "Business Logic" {
-  class ApplicationService
-  class CandidateService
-  class VacancyService
-}
-
-rectangle "Data Access" {
-  class ApplicationRepository
-  class CandidateRepository
-  class VacancyRepository
-}
+' Define all classes with empty bodies
+class MilitaryRecruitmentDbContext
+class ApplicationRepository
+class CandidateRepository
+class VacancyRepository
+class ApplicationService
+class CandidateService
+class VacancyService
+class ApplicationsController
+class CandidatesController
+class VacanciesController
 
 ' Add relationships
 ApplicationsController --> ApplicationService
@@ -35,4 +28,21 @@ VacanciesController --> VacancyService
 ApplicationService --> ApplicationRepository
 CandidateService --> CandidateRepository
 VacancyService --> VacancyRepository
+
+ApplicationRepository --> MilitaryRecruitmentDbContext
+CandidateRepository --> MilitaryRecruitmentDbContext
+VacancyRepository --> MilitaryRecruitmentDbContext
+
+' Add layers as notes
+note top of MilitaryRecruitmentDbContext
+  <b>Data Access Layer</b>
+end note
+
+note top of ApplicationService
+  <b>Business Logic Layer</b>
+end note
+
+note top of ApplicationsController
+  <b>API Layer</b>
+end note
 @enduml

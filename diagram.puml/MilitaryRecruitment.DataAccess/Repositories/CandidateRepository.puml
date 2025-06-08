@@ -1,10 +1,10 @@
 @startuml
 class CandidateRepository {
-    + CandidateRepository(context:MilitaryRecruitmentDbContext)
-    + Add(candidate:Candidate) : void
-    + Update(candidate:Candidate) : void
-    + Delete(candidate:Candidate) : void
-    + GetById(id:Guid) : Candidate
-    + GetAll() : IEnumerable<Candidate>
+    ' + CandidateRepository(context:MilitaryRecruitmentDbContext)
+    ' + Add(candidate:Candidate) : void
+    ' + Update(candidate:Candidate) : void
+    ' + Delete(candidate:Candidate) : void
+    ' + GetById(id:Guid) : Candidate
+    ' + GetAll() : IEnumerable<Candidate>
 }
 @enduml

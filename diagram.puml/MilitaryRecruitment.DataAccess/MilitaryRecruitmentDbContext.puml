@@ -1,9 +1,9 @@
 @startuml
 class MilitaryRecruitmentDbContext {
-    + Vacancies : DbSet<Vacancy> <<get>> <<set>>
-    + Candidates : DbSet<Candidate> <<get>> <<set>>
-    + Applications : DbSet<Application> <<get>> <<set>>
-    + MilitaryRecruitmentDbContext(options:DbContextOptions<MilitaryRecruitmentDbContext>)
+    ' + Vacancies : DbSet<Vacancy> <<get>> <<set>>
+    ' + Candidates : DbSet<Candidate> <<get>> <<set>>
+    ' + Applications : DbSet<Application> <<get>> <<set>>
+    ' + MilitaryRecruitmentDbContext(options:DbContextOptions<MilitaryRecruitmentDbContext>)
 }
 ' "IdentityDbContext`1" "<AppUser>" <|-- MilitaryRecruitmentDbContext
 @enduml
